@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorldArena</title>
+  <meta name="description" content="WorldArena: a research hub for world models, video generation, and embodied intelligence." />
+
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --panel: #111622;
+      --text: #e6e8ef;
+      --muted: #9aa1b2;
+      --accent: #6cf2c2;
+      --accent-2: #7aa2ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, #1a1f2f, transparent), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+    }
+
+    header p {
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #151a2b, var(--panel));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 1.8rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(108,242,194,0.15);
+      color: var(--accent);
+      margin-right: 0.4rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 1.5rem 3rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent-2);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>WorldArena</h1>
+    <p>
+      A lightweight research arena for <strong>world models</strong>, <strong>video generation</strong>,
+      and <strong>embodied intelligence</strong>. Built for experiments, benchmarks, and ideas in motion.
+    </p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>🚀 What is WorldArena?</h2>
+      <p>
+        WorldArena is an open research space for exploring large-scale world models, diffusion-based video generation,
+        and policy learning grounded in visual dynamics.
+      </p>
+      <span class="tag">World Models</span>
+      <span class="tag">Video Diffusion</span>
+      <span class="tag">Embodied AI</span>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>📄 Projects</h2>
+        <p>
+          Research projects, codebases, and experimental pipelines hosted under the WorldArena umbrella.
+        </p>
+        <p>
+          <a href="https://github.com/worldarena" target="_blank">→ View GitHub Organization</a>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>📊 Benchmarks</h2>
+        <p>
+          Evaluation protocols for long-horizon video prediction, physical consistency, and controllability.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>🧠 Ideas & Notes</h2>
+        <p>
+          Design notes, negative results, and emerging ideas around DiT, VAE, and policy-conditioned generation.
+        </p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>📬 Contact</h2>
+      <p>
+        Interested in collaboration or discussion? Reach out via GitHub or open an issue.
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/worldarena" target="_blank">github.com/worldarena</a>
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      © <span id="year"></span> WorldArena · Built with GitHub Pages
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
