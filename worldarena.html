@@ -1,0 +1,2636 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>WorldLens: Full-Spectrum Evaluations of Driving World Models in Real World</title>
+
+        <link rel="icon" href="assets_common/icons/worldbench-circle.png" type="image/x-icon">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="./static/js/distill_template.v2.js"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+
+        <script defer="" src="./static/js/hider.js"></script>
+        <script src="./static/js/image_interact.js"></script>
+        <script src="./static/js/switch_videos.js"></script>
+
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/worldlens.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>  <!-- jquery -->
+        <script defer src="./static/js/medium-zoom.min.js"></script>
+        <script defer src="./static/js/zoom.js"></script>
+
+
+        <style>
+          .worldlens {
+            font-weight: bold;
+          }
+          .worldlens .w  { color: #34cccc; }
+          .worldlens .o  { color: #46cbbb; }
+          .worldlens .r  { color: #5fcaa1; }
+          .worldlens .l  { color: #77c888; }
+          .worldlens .d  { color:	#9bc765; }
+          .worldlens .l2 { color: #b9c546; }
+          .worldlens .e  { color: #e3c21c; }
+          .worldlens .n  { color:	#f3c10c; }
+          .worldlens .s  { color: #ffc000; }
+        </style>
+
+        <style>
+          #definition .wb-bridge {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #374151;
+            margin: 1rem 0 .75rem;
+          }
+          #definition .wb-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.25rem;
+            margin-top: .5rem;
+          }
+          @media (max-width: 1200px) {
+            #definition .wb-grid-4 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+          }
+          @media (max-width: 1024px) {
+            #definition .wb-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          }
+          @media (max-width: 640px) {
+            #definition .wb-grid-4 { grid-template-columns: 1fr; }
+          }
+          #definition .wb-card h4 {
+            display: flex; align-items: center; gap: .5rem;
+            font-size: 1rem; margin: 0 0 .35rem;
+          }
+          #definition .wb-card p.small {
+            margin: .35rem 0; color: #4b5563; line-height: 1.6;
+          }
+        </style>
+    </head>
+
+
+    <body>
+        <div class="header-wrapper">
+
+            <div class="header-container", id="header-container">
+                <div class="header-content">
+                <h1 style="font-size:3.2rem;">
+                  <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>:
+                  Full-Spectrum Evaluations of Driving World Models in Real World
+                </h1>
+
+                <h2 style="margin:2.2rem 0 1.8rem; display:flex; align-items:center; gap:0.4rem;">
+                  <span class="icon is-small">
+                    <img src="assets_common/icons/worldbench-circle.png" style="height:1.8em; vertical-align:text-top;">
+                  </span>&nbsp;WorldBench Team
+                </h2>
+
+                <div class="button-container">
+                    <a href="https://arxiv.org/abs/2512.10958" class="button paper-link" target="_blank">
+                        <span class="icon is-small">
+                            <i class="ai ai-arxiv "  style="height: 1.5em;"></i>
+                        </span><span>arXiv</span>
+                    </a>
+                    <a href="assets_common/papers/worldlens.pdf" class="button paper-link" target="_blank">
+                        <span class="icon is-small">
+                            <img src="assets_common/icons/pdf.png" style="height: 1.4em;">
+                        </span><span>PDF</span>
+                    </a>
+                    <a href="https://github.com/worldbench/WorldLens" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="assets_common/icons/github.png" style="height: 1.4em;">
+                        </span><span>GitHub</span>
+                    </a>
+                    <a href="https://huggingface.co/spaces/worldbench/WorldLens" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="assets_common/icons/hf.png" style="height: 1.5em;">
+                        </span><span>Leaderboard</span>
+                    </a>
+                    <a href="https://huggingface.co/datasets/worldbench" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="assets_common/icons/hf.png" style="height: 1.5em;">
+                        </span><span>Data</span>
+                    </a>
+                </div>
+                </div>
+                <div class="header-image">
+                    <img src="assets/worldlens/figures/worldlens.png" alt="Teaser Image" class="teaser-image">
+                </div>
+            </div>
+        </div>
+
+        <d-article>
+            <d-contents>
+                <nav>
+                    <h4>Contents</h4>
+                    <div><a href="#definition">Protocol</a></div>
+                    <div><a href="#taxonomy">Taxonomy</a></div>
+                    <div><a href="#leaderboard">Leaderboard</a></div>
+                    <div><a href="#dataset">WorldLens-26K</a></div>
+                    <div><a href="#agent">WorldLens-Agent</a></div>
+                    <div><a href="#examples">Examples</a></div>
+                    <div><a href="#contributors">Contributors</a></div>
+                </nav>
+            </d-contents>
+
+
+
+
+
+              <section id="introduction">
+                <div class="wb-section">
+                  <div class="wb-kicker">
+                    <span class="icon is-small">
+                        <img src="assets/worldlens/icons/car1.png" style="height: 1.4em;">
+                      </span>&nbsp;Is your driving world model an all-around player?</div>
+                  <div class="wb-hr"></div>
+
+                  <p class="wb-lead">
+                    Generative world models are reshaping embodied AI, enabling agents to synthesize realistic 4D driving environments that look convincing but often fail physically or behaviorally. 
+                  </p>
+                  <p class="wb-lead">
+                    Despite rapid progress, the field still lacks a unified way to assess whether generated worlds preserve geometry, obey physics, or support reliable control. 
+                  </p>
+                  <p class="wb-lead">
+                    We introduce <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>, a full-spectrum benchmark evaluating how well a model builds, understands, and behaves within its generated world. 
+                  </p>
+                  <figure style="width: 100%; max-width: 1000px; display: block; margin: 24px auto;">
+                    <img src="assets/worldlens/figures/teaser.png">
+                  </figure>
+                  <br><br>
+                </div>
+              </section>
+
+
+
+              <section id="definition">
+                <h2><span class="icon is-small">
+                    <img src="assets_common/icons/worldbench-mini.gif" style="height: 1.5em; vertical-align:text-bottom;">
+                    </span>Evaluation Protocol</h2>
+                <!-- <div class="wb-hr" style="margin-bottom:1.25rem;"></div> -->
+
+                <style>
+                  #definition .wb-grid{
+                    grid-template-columns: 1fr !important;
+                    max-width: 900px;
+                    margin: 0 auto;
+                    gap: 1rem 1.25rem;
+                  }
+                </style>
+
+
+
+                <div class="wb-grid">
+
+                  <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/generation.png" style="height: 2em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Generation</a>
+                    </h3>
+                    <p>
+                      measuring whether a model can synthesize <b>visually realistic</b>, <b>temporally stable</b>, and <b>semantically consistent</b> scenes. 
+                      Even state-of-the-art models that achieve low perceptual error (e.g., LPIPS, FVD) often suffer from view flickering or motion instability, revealing the limits of current diffusion-based architectures.
+                    </p>
+                  </article>
+
+                  <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/reconstruction.png" style="height: 2em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Reconstruction</a>
+                    </h3>
+                    <p>
+                      probing whether generated videos can be reprojected into a <b>coherent 4D scene</b> using differentiable rendering. 
+                      Models that appear sharp in 2D frequently collapse when reconstructed, producing geometric "floaters": a gap that exposes how temporal coherence remains weakly coupled in most pipelines.
+                    </p>
+                  </article>
+
+                  <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/action-following.png" style="height: 2em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Action-Following</a>
+                    </h3>
+                    <p>
+                      testing if a pre-trained action planner can <b>operate safely</b> inside the generated world. 
+                      High <b>open-loop realism</b> does not guarantee safe <b>closed-loop control</b>; almost all existing world models trigger collisions or off-road drifts, underscoring that photometric realism alone cannot yield functional fidelity.
+                    </p>
+                  </article>
+
+                  <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/downstream.png" style="height: 2em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Downstream Task</a>
+                    </h3>
+                    <p>
+                      evaluating whether the synthetic data support <b>downstream perception models</b> trained on <b>real-world datasets</b>. 
+                      Even visually appealing worlds may degrade detection or segmentation accuracy by 30-50%, highlighting that alignment to task distributions, not just image quality, is vital for practical usability.
+                    </p>
+                  </article>
+
+                  <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/human-preference.png" style="height: 2em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Human Preference</a>
+                    </h3>
+                    <p>
+                      capturing subjective scores such as <b>world realism</b>, <b>physical plausibility</b>, and <b>behavioral safety</b> through large-scale human annotations. 
+                      Our study reveals that models with strong geometric consistency are generally rated as more "real", confirming that perceptual fidelity is inseparable from structural coherence.
+                    </p>
+                  </article>
+    
+                  <br>
+                </div>
+              </section>
+
+
+
+
+
+              <section id="taxonomy">
+                <div class="wb-section">
+
+                  <h2><span class="icon is-small">
+                    A Journey of Evaluation
+                  </h2>
+                  
+                  <figure style="width: 100%; max-width: 1000px; display: block; margin: 24px auto;">
+                    <img src="assets/worldlens/figures/bench.png">
+                  </figure>
+
+                  <div class="wb-kicker">
+                    <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>: Full-Spectrum Evaluations
+                  </div>
+                  <div class="wb-hr" style="margin-bottom:1.25rem;"></div>
+
+                  <p class="wb-lead">
+                    Generative world models must go beyond visual realism to achieve geometric consistency, physical plausibility, and functional reliability. 
+                    <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span> is a unified benchmark that evaluates these capabilities across five complementary aspects - from <b>low-level</b> appearance fidelity to <b>high-level</b> behavioral realism. 
+                  </p>
+                  <p class="wb-lead">
+                    Each aspect is decomposed into fine-grained, interpretable dimensions, forming a comprehensive framework that bridges human perception, physical reasoning, and downstream utility.
+                  </p>
+
+                  <br>
+                </div>
+              </section>
+
+
+
+
+              <section id="models">
+                <div class="wb-section">
+
+                  <div class="wb-kicker">
+                    Benchmarked Models
+                  </div>
+                  <div class="wb-hr" style="margin-bottom:1.25rem;"></div>
+
+                  <div class="models-grid">
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car1.png" loading="lazy">
+                      <div class="model-name">DiST-4D</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2503.15208" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/royalmelon0505/dist4d" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car2.png" loading="lazy">
+                      <div class="model-name">OpenDWM</div>
+                      <div class="model-links">
+                        <a href="https://github.com/SenseTime-FVG/OpenDWM" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/SenseTime-FVG/OpenDWM" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car3.png" loading="lazy">
+                      <div class="model-name">DriveDreamer-2</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2403.06845" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/f1yfisher/DriveDreamer2" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car4.png" loading="lazy">
+                      <div class="model-name">DreamForge</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2409.04003" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/PJLab-ADG/DriveArena" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car5.png" loading="lazy">
+                      <div class="model-name">X-Scene</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2506.13558" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/yuyang-cloud/X-Scene" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car7.png" loading="lazy">
+                      <div class="model-name">MagicDrive-V2</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2411.13807" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/flymin/MagicDrive-V2" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car6.png" loading="lazy">
+                      <div class="model-name">MagicDrive</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2310.02601" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/cure-lab/MagicDrive" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car16.png" loading="lazy">
+                      <div class="model-name">Panacea</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2311.16813" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/wenyuqing/panacea" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car11.png" loading="lazy">
+                      <div class="model-name">DrivingSphere</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2411.11252" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="https://github.com/yanty123/DrivingSphere" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car10.png" loading="lazy">
+                      <div class="model-name">RLGF</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2509.16500" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+                    <article class="model-card">
+                      <img class="model-icon" src="assets/worldlens/icons/car14.png" loading="lazy">
+                      <div class="model-name">AD-R1</div>
+                      <div class="model-links">
+                        <a href="https://arxiv.org/abs/2511.20325" target="_blank" class="project-link icon-only" aria-label="arXiv">
+                          <i class="ai ai-arxiv"></i>
+                        </a>
+                        <a href="" target="_blank" class="project-link icon-only" aria-label="GitHub">
+                          <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                        </a>
+                      </div>
+                    </article>
+
+
+
+                    <article class="model-card more-models-card">
+                      <div class="more-models-content">. . .</div>
+                    </article>
+
+                  </div>
+
+                  <br><br><br><br>
+                
+                </div>
+
+                <style>
+                  #models .models-grid {
+                    display: grid;
+                    grid-template-columns: repeat(5, minmax(0, 1fr));
+                    gap: 1rem 1.25rem;
+                    margin-top: 1.25rem;
+                  }
+
+                  /* Card container */
+                  #models .model-card {
+                    height: 100%;
+                    padding: 0.85rem 0.75rem 0.9rem;
+                    border-radius: 0.75rem;
+                    background: #f9fafb;
+                    border: 1px solid rgba(148, 163, 184, 0.35);
+                    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    gap: 0.4rem;
+
+                    transition: box-shadow 0.16s ease, transform 0.16s ease;
+                  }
+
+                  #models .model-card:hover {
+                    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.09);
+                    transform: translateY(-1px);
+                  }
+
+                  /* Icon + name */
+                  #models .model-icon {
+                    width: 45px;
+                    height: 45px;
+                    object-fit: contain;
+                    margin-bottom: 0.2rem;
+                  }
+
+                  #models .model-name {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #111827;
+                    line-height: 1.3;
+                    min-height: 2.4em; /* keeps rows visually aligned when names wrap */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                  }
+
+                  /* Button row (e.g., arXiv + GitHub) */
+                  #models .model-links {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 0.4rem;
+                    width: 100%;
+                    margin-top: auto; /* pushes buttons to bottom of card */
+                    justify-items: center;
+                  }
+
+                  #models .project-link.icon-only {
+                    width: 40px;
+                    height: 30px;
+                    padding: 0;
+                    border-radius: 999px;
+
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    border: 1px solid rgba(148, 163, 184, 0.6);
+                    background-color: #ffffff;
+                    color: #111827;
+                    text-decoration: none;
+                    cursor: pointer;
+
+                    transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+                  }
+
+                  #models .project-link.icon-only:hover {
+                    border-color: #2563eb;
+                    background-color: #eff6ff;
+                    color: #1d4ed8;
+                  }
+
+                  #models .project-link.icon-only i {
+                    font-size: 0.9rem; /* arXiv / icon font size */
+                  }
+
+                  #models .project-link.icon-only .icon-img {
+                    width: 16px;
+                    height: 16px;
+                    object-fit: contain;
+                  }
+
+                  #models .more-models-card {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    color: #6b7280;  /* neutral gray */
+                    transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+                  }
+
+                  #models .more-models-card:hover {
+                    background: #f3f4f6;
+                    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.09);
+                    transform: translateY(-1px);
+                  }
+
+                  #models .more-models-content {
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    letter-spacing: 4px;
+                    text-align: center;
+                    user-select: none;
+                    pointer-events: none;
+                  }
+
+                  /* Responsive breakpoints */
+                  @media (max-width: 1280px) {
+                    #models .models-grid {
+                      grid-template-columns: repeat(4, minmax(0, 1fr));
+                    }
+                  }
+
+                  @media (max-width: 1024px) {
+                    #models .models-grid {
+                      grid-template-columns: repeat(3, minmax(0, 1fr));
+                    }
+                  }
+
+                  @media (max-width: 768px) {
+                    #models .models-grid {
+                      grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                  }
+
+                  @media (max-width: 480px) {
+                    #models .models-grid {
+                      grid-template-columns: 1fr;
+                    }
+                  }
+                </style>
+
+              </section>
+
+
+
+              
+
+
+
+              <!-- LeaderBoard -->
+              <section id="leaderboard">
+                <div class="wb-section">
+
+                  <h2>
+                    <span class="icon is-small">
+                    <img src="assets_common/icons/worldbench-mini.gif" style="height: 1.5em; vertical-align:text-bottom;">
+                    </span>Official Leaderboard
+                  </h2>
+                  <div style="
+                    width:100%;
+                    max-width:100%;
+                    margin:0 auto;
+                    overflow:hidden;
+                  ">
+                    <iframe
+                      src="https://worldbench-WorldLens.hf.space"
+                      style="
+                        width:100%;
+                        height:720px;
+                        border:0;
+                      "
+                      loading="lazy">
+                    </iframe>
+                  </div>
+                </div><br><br>
+                
+                <article class="wb-card">
+                    <h3>
+                      <span class="icon is-small">
+                        <img src="assets/worldlens/icons/call.png" style="height: 1.8em;" loading="lazy">
+                      </span>
+                      <a class="wb-anchor">Call for Participation</a>
+                    </h3>
+                    <p>
+                      We invite researchers and practitioners to submit their models for evaluation on the leaderboard, enabling consistent comparison and supporting progress in world model research.
+                    </p>
+                    <p>
+                      For more details, kindly refer to our&nbsp;<span class="icon is-small">
+                    <img src="assets_common/icons/github.png" style="height:1.25em; vertical-align:text-top;">
+                  </span>&nbsp;<a href="https://github.com/worldbench/WorldLens" target="_blank">Evaluation Toolkit</a>.
+                    </p>
+                </article>
+                  
+                <br><br><br>
+              </section>
+
+
+
+
+            <section id="dataset">
+              <div class="wb-section">
+
+                <h2><span class="icon is-small">
+                    <img src="assets/worldlens/icons/data.png" style="height: 1.5em; vertical-align:text-bottom;" loading="lazy">
+                    </span>WorldLens-26K</h2>
+
+                <div style="overflow:auto;">
+
+                  <figure style="
+                    float:right;
+                    width:65%;
+                    max-width:520px;
+                    margin:0 0 1rem 1rem;
+                  ">
+                    <img src="assets/worldlens/figures/dataset.png"
+                        style="width:100%; height:auto;" loading="lazy">
+                  </figure>
+
+
+                  <p class="wb-lead">
+                    To bridge the gap between human judgment and automated evaluation, we curate a large-scale
+                    human-annotated dataset comprising 26,808 scoring records of generated videos.
+                  </p>
+
+                  <p class="wb-lead">
+                    Each entry includes a discrete score and a concise textual rationale written by annotators,
+                    capturing both quantitative assessment and qualitative explanation.
+                  </p>
+
+                  <p class="wb-lead">
+                    The dataset covers complementary dimensions of perceptual quality.
+                    This balanced design ensures comprehensive coverage across spatial, temporal,
+                    and behavioral aspects of world-model realism.
+                  </p>
+
+                  <p class="wb-lead">
+                    We envision
+                    <span class="worldlens">
+                      <span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>-26K
+                    as a foundational resource for training auto-evaluation agents and constructing
+                    human-aligned reward or advantage functions for reinforcement fine-tuning of
+                    generative world models.
+                  </p>
+
+                </div>
+
+              </div><br><br><br>
+            </section>
+
+
+
+
+
+
+            <section id="agent">
+              <div class="wb-section">
+
+                <h2><span class="icon is-small">
+                  <span class="icon is-small">
+                    <img src="assets/worldlens/icons/agent.png" style="height: 1.5em; vertical-align:text-bottom;" loading="lazy">
+                    </span>WorldLens-Agent
+                </h2>
+                
+                <figure style="width: 100%; max-width: 1000px; display: block; margin: 24px auto;">
+                  <img src="assets/worldlens/figures/agent.png" loading="lazy">
+                </figure>
+
+                <div class="wb-kicker">
+                  <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>-Agent: SFT from Human Feedback
+                </div>
+                <div class="wb-hr" style="margin-bottom:1.25rem;"></div>
+
+                <p class="wb-lead">
+                  Evaluating generated worlds hinges on human-centered criteria (physical plausibility) and subjective preferences (perceived realism) that quantitative metrics inherently miss, highlighting the necessity of a human-aligned evaluator.
+                </p>
+
+                <p class="wb-lead">
+                  To this end, we introduce <span class="worldlens"><span class="w">W</span><span class="o">o</span><span class="r">r</span><span class="l">l</span><span class="d">d</span><span class="l2">L</span><span class="e">e</span><span class="n">n</span><span class="s">s</span></span>-Agent, a vision-language critic agent trained on WorldLens-26K. 
+                  Through LoRA-based supervised fine-tuning, we distill human perceptual and physical judgments into a Qwen3-VL, enabling it to internalize criteria such as realism, plausibility, and behavioral safety.
+                </p>
+
+                <p class="wb-lead">
+                  This provides consistent, human-aligned assessments, offering a scalable preference oracle for benchmarking future world models.
+                </p>
+
+                <br><br><br>
+              </div>
+            </section>
+
+
+
+
+
+
+            <h2 id="examples">Generated Examples</h2>
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/human-preference.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Vehicle Realism</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/human/vehicle_realism/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/human/vehicle_realism/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/human/vehicle_realism/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/vehicle_realism/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/vehicle_realism/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/human/vehicle_realism/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/vehicle_realism/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/vehicle_realism/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/human/vehicle_realism/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/vehicle_realism/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/vehicle_realism/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/human-preference.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Pedestrian Realism</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/human/pedestrian_realism/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/human/pedestrian_realism/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/human/pedestrian_realism/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/pedestrian_realism/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/pedestrian_realism/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/human/pedestrian_realism/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/pedestrian_realism/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/pedestrian_realism/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/human/pedestrian_realism/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/human/pedestrian_realism/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/human/pedestrian_realism/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/generation.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Subject Fidelity</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/subject_fidelity/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/subject_fidelity/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/generation/subject_fidelity/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/subject_fidelity/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/subject_fidelity/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/subject_fidelity/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/subject_fidelity/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/subject_fidelity/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/subject_fidelity/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/subject_fidelity/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/subject_fidelity/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+            
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/generation.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Depth Discrepancy</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/depth_discrepancy/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/depth_discrepancy/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/generation/depth_discrepancy/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/depth_discrepancy/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/depth_discrepancy/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/depth_discrepancy/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/depth_discrepancy/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/depth_discrepancy/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/depth_discrepancy/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/depth_discrepancy/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/depth_discrepancy/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/generation.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Temporal Consistency</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/temporal_consistency/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/temporal_consistency/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/generation/temporal_consistency/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/temporal_consistency/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/temporal_consistency/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/temporal_consistency/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/temporal_consistency/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/temporal_consistency/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/temporal_consistency/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/temporal_consistency/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/temporal_consistency/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/generation.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Semantic Consistency</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/semantic_consistency/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/generation/semantic_consistency/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/generation/semantic_consistency/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/semantic_consistency/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/semantic_consistency/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/semantic_consistency/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/semantic_consistency/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/semantic_consistency/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/generation/semantic_consistency/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/generation/semantic_consistency/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/generation/semantic_consistency/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+           
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/reconstruction.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Photometric Discrepancy</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/photometric_discrepancy/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/photometric_discrepancy/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/photometric_discrepancy/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/photometric_discrepancy/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/photometric_discrepancy/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/photometric_discrepancy/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/reconstruction.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Geometric Discrepancy</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/geometric_discrepancy/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/geometric_discrepancy/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/geometric_discrepancy/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/geometric_discrepancy/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/geometric_discrepancy/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/geometric_discrepancy/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+            
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/reconstruction.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Novel View Quality</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/novel_view_quality/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/novel_view_quality/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_quality/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_quality/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_quality/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_quality/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_quality/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_quality/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_quality/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_quality/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_quality/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/reconstruction.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Novel View Discrepancy</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/1/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/reconstruction/novel_view_discrepancy/2/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/downstream.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Map Segmentation</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/map_seg/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/map_seg/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/downstream_task/map_seg/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/map_seg/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/map_seg/0/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/map_seg/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/map_seg/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/map_seg/1/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/map_seg/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/map_seg/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/map_seg/2/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+            
+
+            <!-- <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/downstream.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: 3D Object Detection</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/3d_object_detection/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/3d_object_detection/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_detection/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_detection/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_detection/0/good/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_detection/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_detection/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_detection/1/bad/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_detection/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_detection/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_detection/2/bad/00000.jpg"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section> -->
+
+
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/downstream.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: 3D Object Tracking</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_tracking/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_tracking/1/bad/00000.png"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/3d_object_tracking/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/3d_object_tracking/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/3d_object_tracking/2/bad/00000.png"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+            
+
+
+
+            <div class="wb-kicker">
+              <span class="icon is-small">
+                  <img src="assets/worldlens/icons/downstream.png" style="height: 1.6em;" loading="lazy">
+                </span>&nbsp;Dimension: Occupancy Prediction</div>
+            <div class="wb-hr"></div>
+
+            <section class="videogen videogen-compare" tabindex="0">
+              <div class="video-hero">
+                <div class="video-compare-split" data-compare>
+                  
+                  <!-- Left: GT -->
+                  <div class="video-wrapper gt-layer">
+                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/occupancy_prediction/0/good/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-left">Good Case</div>
+                  </div>
+
+                  <!-- Right: Generated -->
+                  <div class="video-wrapper gen-layer">
+                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                      <source src="assets/worldlens/videos/downstream_task/occupancy_prediction/0/bad/video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="video-label label-right" data-role="method-label">Failure Case</div>
+                  </div>
+
+                  <!-- Split handle -->
+                  <div class="split-handle" data-role="split-handle"
+                      role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                    <div class="handle-line"></div>
+                    <div class="handle-arrows">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thumbnails control which videos load -->
+              <div class="thumb-bar" role="tablist">
+                <button class="thumb is-active"
+                        role="tab" aria-selected="true"
+                        data-gt-src="assets/worldlens/videos/downstream_task/occupancy_prediction/0/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/occupancy_prediction/0/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/occupancy_prediction/0/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene1</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/occupancy_prediction/1/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/occupancy_prediction/1/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/occupancy_prediction/1/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene2</span>
+                </button>
+
+                <button class="thumb"
+                        role="tab" aria-selected="false"
+                        data-gt-src="assets/worldlens/videos/downstream_task/occupancy_prediction/2/good/video.mp4"
+                        data-gen-src="assets/worldlens/videos/downstream_task/occupancy_prediction/2/bad/video.mp4"
+                        data-label="Failure Case">
+                  <img src="assets/worldlens/videos/downstream_task/occupancy_prediction/2/good/00000.png"
+                      loading="lazy" />
+                  <span>Scene3</span>
+                </button>
+              </div>
+              <br><br>
+            </section>
+
+
+
+
+
+
+
+            <section id="contributors">
+              <div class="wb-section">
+
+                <h2>Contributors</h2>
+
+                <div class="contributors-list">
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/ao_liang.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Ao Liang</div>
+                      <div class="contributor-note">Core Contributor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://alanliangc.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=ocyBGGYAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/AlanLiangC" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/lingdong_kong.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Lingdong Kong</div>
+                      <div class="contributor-note">Core Contributor, Project Lead</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="mailto:lingdong.kong@u.nus.edu" aria-label="Email"><i class="fas fa-envelope"></i> </a>
+                      <a href="https://ldkong.com" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=-j1j7TkAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/ldkong1205/" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://www.linkedin.com/in/ldkong/" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                      <a href="https://twitter.com/ldkong1205" target="_blank" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/tianyi_yan.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Tianyi Yan</div>
+                      <div class="contributor-note">Core Contributor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://yanty123.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com.hk/citations?user=0JmbnNQAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/yanty123" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/hongsi_liu.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Hongsi Liu</div>
+                      <div class="contributor-note">Core Contributor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://ericliuhhh.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=9BL2i24AAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/EricLiuhhh" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/icons/worldbench-circle.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Wesley Yang</div>
+                      <div class="contributor-note">Core Contributor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                    </div>
+                  </div>
+                  
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/ziqi_huang.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Ziqi Huang</div>
+                      <div class="contributor-note">Contributor, Human Preference</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://ziqihuangg.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=Y3h_pzMAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/ziqihuangg" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://www.linkedin.com/in/ziqi-huang-435875176" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                      <a href="https://twitter.com/ziqi_huang_" target="_blank" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/wei_yin.jpeg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Wei Yin</div>
+                      <div class="contributor-note">Contributor, Closed-Loop Simulation</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://yvanyin.xyz/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=ZIf_rtcAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/YvanYin" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://www.linkedin.com/in/wei-yin-28b64b167/" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/jialong_zuo.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Jialong Zuo</div>
+                      <div class="contributor-note">Contributor, Object ReID</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://openreview.net/profile?id=~Jialong_Zuo1" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=R5OWszMAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/Zplusdragon" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/yixuan_hu.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Yixuan Hu</div>
+                      <div class="contributor-note">Contributor, Depth</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://openreview.net/profile?id=~Yixuan_Hu1" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://de.linkedin.com/in/yixuan-hu-55a0a2269" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/dekai_zhu.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Dekai Zhu</div>
+                      <div class="contributor-note">Contributor, Depth</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://dekai21.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=rehMAJUAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/Dekai21" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://de.linkedin.com/in/dekai-zhu-621573208" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/dongyue_lu.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Dongyue Lu</div>
+                      <div class="contributor-note">Contributor, Cross-View Matching</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="#" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="#" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="#" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="#" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/youquan_liu.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Youquan Liu</div>
+                      <div class="contributor-note">Contributor, Human Preference</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://openreview.net/profile?id=~Youquan_Liu1" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=J9a48hMAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/youquanl" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/guangfeng_jiang.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Guangfeng Jiang</div>
+                      <div class="contributor-note">Contributor, Reconstruction</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="#" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=-ocVCHgAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="#" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/linfeng_li.jpeg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Linfeng Li</div>
+                      <div class="contributor-note">Contributor, Human Preference</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="#" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="#" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="#" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/xiangtai_li.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Xiangtai Li</div>
+                      <div class="contributor-note">Contributor, Human Preference</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://lxtgh.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=FL3ReD0AAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/lxtGH" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://twitter.com/xtl994" target="_blank" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/long_zhuo.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Long Zhuo</div>
+                      <div class="contributor-note">Contributor, Human Preference</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="#" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="#" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/lai_xing_ng.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Lai Xing Ng</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://ipal.cnrs.fr/lai-xing-ng/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=OOqyeJIAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://sg.linkedin.com/in/lai-xing-ng-phd-09156156" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/benoit_cottereau.jpg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Benoit R. Cottereau</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://ipal.cnrs.fr/benoit-cottereau-personal-page/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=9I7uKooAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://fr.linkedin.com/in/benoit-cottereau-347470270" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/changxin_gao.jpeg"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Changxin Gao</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://sites.google.com/site/changxingao/home" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=4tku-lwAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/liang_pan.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Liang Pan</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="#" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="#" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="#" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="#" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/wei_tsang_ooi.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Wei Tsang Ooi</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://www.comp.nus.edu.sg/cs/people/ooiwt/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=nFP2ldkAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/weitsang" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://sg.linkedin.com/in/weitsang" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                      <a href="https://x.com/weitsang/" target="_blank" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+
+                  <!-- Row -->
+                  <div class="contributor-row">
+                    <img class="contributor-photo"
+                        src="assets_common/photos/ziwei_liu.png"
+                        loading="lazy" width="56" height="56">
+
+                    <div class="contributor-text">
+                      <div class="contributor-name">Ziwei Liu</div>
+                      <div class="contributor-note">Advisor</div>
+                    </div>
+                    <div class="contributor-links">
+                      <a href="https://liuziwei7.github.io/" target="_blank" aria-label="Homepage"><i class="fas fa-globe"></i> </a>
+                      <a href="https://scholar.google.com/citations?user=lc45xlcAAAAJ&hl=en" target="_blank" aria-label="Google Scholar"> <i class="ai ai-google-scholar"></i> </a>
+                      <a href="https://github.com/liuziwei7" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a>
+                      <a href="https://sg.linkedin.com/in/ziwei-liu-852b265a" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a>
+                      <a href="https://twitter.com/liuziwei7" target="_blank" aria-label="X (Twitter)"> <i class="fab fa-twitter"> </i> </a>
+                    </div>
+                  </div>
+
+                </div>
+                <br>
+              </div>
+              <br><br>
+            </section>
+
+
+
+            <section id="related-projects">
+              <div class="wb-section">
+
+                <h2>Related Projects</h2>
+
+                <div class="project-grid">
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/worldbench_survey.webp"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">3D and 4D World Modeling: A Survey</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2509.07996" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://worldbench.github.io/survey" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/worldbench/survey" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/spaces/worldbench/WorldLens" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/vbench.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">VBench: Benchmark Suite for Video Generative Models</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2311.17982" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://vchitect.github.io/VBench-project/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/Vchitect/VBench" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/spaces/Vchitect/VBench_Leaderboard" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/vbench2.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">VBench++: Versatile Video Generation Benchmark</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2411.13503" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://vchitect.github.io/VBench-project/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/Vchitect/VBench" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/spaces/Vchitect/VBench_Leaderboard" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/survey_vla4ad.webp"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">VLA for Autonomous Driving: Past, Present, and Future</h3>
+                    <div class="project-links">
+                      <a href="https://worldbench.github.io/vla4ad.pdf" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://worldbench.github.io/vla4ad" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/worldbench/awesome-vla-for-ad" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="hhttps://huggingface.co/spaces/worldbench/vla4ad" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/lidarcrafter.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">LiDARCrafter: Dynamic 4D World Modeling from LiDAR Sequences</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2508.03692" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://lidarcrafter.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/lidarcrafter/toolkit" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/3eed.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">3EED: Ground Everything Everywhere in 3D</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2511.01755" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://project-3eed.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/worldbench/3EED" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/datasets/RRRong/3EED" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/pi3det.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">Perspective-Invariant 3D Object Detection</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2507.17665" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://pi3det.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/pi3det/toolkit" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/datasets/Pi3DET/data" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/drivebench.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">Are VLMs Ready for Autonomous Driving?</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2501.04003" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://drive-bench.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/drive-bench/toolkit" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                      <a href="https://huggingface.co/datasets/drive-bench/arena" target="_blank" class="project-link">
+                        <img src="assets_common/icons/hf.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/dynamiccity.webp"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">DynamicCity: Large-Scale 4D Occupancy Generation</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2410.18084" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://dynamic-city.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/3DTopia/DynamicCity" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/spiral.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">SPIRAL: Semantic-Aware Progressive LiDAR Generation</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2505.22643" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://dekai21.github.io/SPIRAL/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <a href="https://github.com/worldbench/SPIRAL" target="_blank" class="project-link">
+                        <img src="assets_common/icons/github.png" class="icon-img" loading="lazy">
+                      </a>
+                    </div>
+                  </article>
+
+                  <!-- Project -->
+                  <article class="wb-card project-card">
+                    <div class="project-thumb">
+                      <img src="assets_common/teasers/see4d.png"
+                         loading="lazy">
+                    </div>
+                    <h3 class="project-title">See4D: Pose-Free 4D Generation via Auto-Regressive Inpainting</h3>
+                    <div class="project-links">
+                      <a href="https://arxiv.org/abs/2510.26796" target="_blank" class="project-link">
+                        <i class="ai ai-arxiv"></i>
+                      </a>
+                      <a href="https://see-4d.github.io/" target="_blank" class="project-link">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                </div>
+
+              </div><br><br>
+            </section>
+
+
+
+
+            <br><br>
+
+
+            <footer class="wb-footer">
+              <br>
+              <div class="wb-footer-content">
+                <p>
+                  This website is licensed under a
+                  <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Creative Commons Attribution-ShareAlike 4.0 International License
+                  </a>
+                </p>
+                <p>
+                  © WorldBench 2025-2026. All Rights Reserved
+                </p>
+              </div>
+              <br>
+            </footer>
+
+
+        </d-article>
+
+        
+        <script src="contents_bar.js"></script>
+        <script src="./static/js/worldlens.js"></script>
+
+    </body>
+</html>
