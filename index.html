@@ -137,6 +137,59 @@
             main { margin: 0 auto; max-width: 1000px; padding: 20px; }
         }
 
+        @media (max-width: 768px) {
+            .benchmark-table { font-size: 0.75rem; }
+        }
+
+        .benchmark-table-container {
+            width: 100%;
+            overflow-x: auto; /* 保证在手机端可以左右滑动 */
+            margin: 20px 0;
+        }
+
+        .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            color: #334155;
+            background: white;
+        }
+
+        .benchmark-table th, .benchmark-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .benchmark-table thead th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .benchmark-table .benchmark-name {
+            text-align: left;
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        /* 强调 WorldArena (Ours) 这一行 */
+        .benchmark-table .ours {
+            background-color: #f1f5f9;
+            font-weight: bold;
+        }
+
+        /* 状态图标样式 */
+        .status-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .check {
+            color: #22c55e; /* 绿色勾 */
+        }
+        .cross {
+            color: #ef4444; /* 红色叉 */
+        }
+
         /* 卡片基础 */
         .card {
             background: white;
@@ -481,7 +534,7 @@
 
     <section class="hero-section">
         <div>
-            <h1 class="main-title">WORLDARENA</h1>
+            <h1 class="main-title">WorldArena</h1>
             <p class="subtitle">A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models</p>
             <div class="action-buttons">
                 <a href="https://github.com/worldarena/WorldArena" class="btn btn-secondary" target="_blank">
@@ -506,11 +559,69 @@
 
         <section id="comparison">
             <h2 class="section-title">Comparison with Existing Benchmarks</h2>
-            <div class="card" style="text-align: center;">
-                <img src="assets_common/photos/benchmark_comparison.png" alt="Benchmark Comparison" class="perceptual-image">
-                <p style="color: #64748b; font-style: italic;">Figure 1: Comprehensive comparison of WorldArena with existing world model benchmarks</p>
+            <div class="card" style="border: 1px solid #000; box-shadow: none;">
+                <div class="benchmark-table-container" style="width: 100%; overflow-x: auto; margin: 20px 0;">
+                    <table class="benchmark-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem; color: #000000; background: white; border: 1px solid #000;">
+                        <thead>
+                            <tr style="background-color: #f1f5f9; color: #000000;">
+                                <th rowspan="2" style="border: 1px solid #000; padding: 12px; font-weight: 900;">
+                                    Benchmark
+                                </th>
+                                <th colspan="6" style="border: 1px solid #000; padding: 12px; font-weight: 900;">
+                                    Video Quality
+                                </th>
+                                <th colspan="3" style="border: 1px solid #000; padding: 12px; font-weight: 900;">
+                                    Embodied Tasks
+                                </th>
+                                <th rowspan="2" style="border: 1px solid #000; padding: 12px; font-weight: 900;">
+                                    Human
+                                </th>
+                            </tr>
+                            <tr style="background-color: #f1f5f9; color: #000000;">
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Visual Quality</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Motion Quality</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Content Consist.</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Physics Adher.</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Control ability</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">3D Acc.</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Data Engine</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Policy Eval.</th>
+                                <th style="border: 1px solid #000; padding: 10px; font-weight: 800;">Action Planner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">WorldModelBench</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">WorldSimBench</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">WorldScore</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">4DWorldBench</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">EWMBench</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">WorldEval</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">World-in-World</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td></tr>
+                            <tr><td style="border: 1px solid #000; padding: 10px; text-align: left; padding-left: 20px;">WoW-World-Eval</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #ef4444; font-weight: bold;">✕</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td><td style="border: 1px solid #000; text-align: center; color: #22c55e; font-weight: bold;">✓</td></tr>
+
+                            <tr style="color: #000000; font-weight: 950; font-size: 1.15rem; background-color: #ffffff;">
+                                <td style="border: 3px solid #000; padding: 15px; text-align: left; padding-left: 20px;">WorldArena (Ours)</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                                <td style="border: 3px solid #000; text-align: center; color: #22c55e;">✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color: #000; font-style: italic; text-align: center; margin-top: 10px; font-weight: 600;">
+                    Table 1: Comprehensive comparison of WorldArena with existing world model benchmarks
+                </p>
             </div>
         </section>
+
+
 
         <section id="architecture">
             <h2 class="section-title">Core Architecture</h2>
