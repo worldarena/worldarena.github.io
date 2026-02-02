@@ -36,6 +36,10 @@
     <script defer src="./static/js/zoom.js"></script>
 
     <style>
+        html {
+            scroll-behavior: smooth; /* 全局平滑滚动 */
+            scroll-padding-top: 100px; /* 跳转后顶部留出的距离，防止标题被遮挡 */
+        }
         /* --- 原有样式保留 --- */
         .worldarena { font-weight: bold; }
         .worldarena .w  { color: #34cccc; }
@@ -91,30 +95,32 @@
             font-size: 0.76rem;
             color: #64748b;
             text-decoration: none;
-            padding: 6px 10px;
+            padding: 8px 12px; /* 稍微增加间距以便点击 */
             border-radius: 6px;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 更平滑的过渡 */
             line-height: 1.4;
             border-left: 3px solid transparent;
             font-weight: 500;
             margin-bottom: 4px;
+            position: relative;
         }
 
+        /* 悬停效果 */
         .fixed-sidebar nav a:hover {
             color: #2563eb;
             background: rgba(37, 99, 235, 0.05);
-            border-left: 3px solid rgba(37, 99, 235, 0.5);
-            transform: translateX(3px);
+            transform: translateX(4px); /* 悬停时向右微动，更有动感 */
         }
 
+        /* 重点：感应到滚动位置后的激活样式 */
         .fixed-sidebar nav a.active {
-            color: #1e40af;
+            color: #1e40af !important;
             font-weight: 700;
-            background: rgba(37, 99, 235, 0.1);
-            border-left: 3px solid #2563eb;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+            background: rgba(37, 99, 235, 0.1) !important;
+            border-left: 3px solid #2563eb !important; /* 明显的左侧边框 */
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+            transform: translateX(4px); /* 激活时也保持偏移，突出显示 */
         }
-
         d-contents { display: none !important; }
 
         main {
@@ -267,9 +273,61 @@
             display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;
             flex-wrap: wrap;
         }
-        .scene-group { display: flex; gap: 8px; }
+        /* 场景选择区域容器 */
+        .scene-selection-area {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .scene-group {
+            display: flex;
+            gap: 20px; /* 增加按钮之间的间距 */
+        }
+
+        /* 单个按钮的包裹框 */
+        .scene-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* 缩略图变大 */
         .scene-thumb {
-            width: 70px; height: 50px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; object-fit: cover; opacity: 0.7; transition: all 0.2s;
+            width: 240px; /* 宽度增加 */
+            height: 150px; /* 高度增加 */
+            border-radius: 8px;
+            border: 3px solid #e2e8f0;
+            object-fit: cover;
+            transition: all 0.3s ease;
+            filter: grayscale(0.5); /* 未选中时带一点灰色 */
+        }
+
+        .scene-item:hover .scene-thumb {
+            transform: translateY(-5px);
+            border-color: #cbd5e1;
+            filter: grayscale(0);
+        }
+
+        /* 选中状态 */
+        .scene-item.active .scene-thumb {
+            border-color: #2563eb;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+            filter: grayscale(0);
+        }
+
+        /* Task 文字标注 */
+        .scene-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+
+        .scene-item.active .scene-label {
+            color: #2563eb;
         }
         .scene-thumb:hover { opacity: 1; transform: scale(1.05); }
         .scene-thumb.active { border-color: #2563eb; opacity: 1; box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }
@@ -280,23 +338,92 @@
         }
         .instruction-text i { color: #2563eb; }
 
-        /* 4. Video Comparison Container */
         .video-compare-wrapper {
-            position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px auto;
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto 30px auto;
+            aspect-ratio: 16 / 9; /* 宽屏大容器 */
+            background: #000;
+            overflow: hidden;
+            display: flex; /* 关键：让左右两部分并排 */
         }
 
-        /* The Slider Box */
-        .slider-container {
-            position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 10px;
+        /* 左侧视频容器 */
+        .video-layer.layer-left {
+            position: relative; /* 取消之前的 absolute */
+            height: 100%;
+            width: 50%; /* 初始各占一半 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.2);
         }
+
+        /* 右侧视频容器 */
+        .video-layer.layer-right {
+            position: relative; /* 取消之前的 absolute */
+            height: 100%;
+            flex: 1; /* 占据剩余所有空间 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+        }
+
         .video-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;
+            /* 取消绝对定位，让它们按 flex 布局排列 */
+            position: relative !important; 
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            align-items: center; /* 垂直居中 */
         }
+
+        .layer-left {
+            /* 初始宽度，JS 会动态改这个值 */
+            width: 50%; 
+            justify-content: flex-end; /* 视频向右靠，顶住中间线 */
+        }
+
+        .layer-right {
+            flex: 1; /* 自动占据剩下的所有右侧空间 */
+            justify-content: flex-start; /* 视频向左靠，顶住中间线 */
+        }
+
         .video-layer video {
-            width: 100%; height: 100%; object-fit: contain; pointer-events: none;
+            /* 关键：视频高度撑满，宽度自适应，保证 4:3 完整 */
+            height: 100%;
+            width: auto;
+            max-width: 100%; 
+            object-fit: contain;
         }
-        
+
+
+
+        /* 滑块手柄改为基于百分比定位 */
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #fff;
+            z-index: 10;
+            cursor: ew-resize;
+            transform: translateX(-50%); /* 确保线正好在两个盒子交界处 */
+        }
+
+        .slider-container {
+            display: flex; /* 让左右两个 layer 并排 */
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #000;
+        }
         /* Labels: Bottom Corners, Small, Semi-transparent */
         .video-label {
             position: absolute; bottom: 8px; padding: 2px 8px;
@@ -340,6 +467,7 @@
 </head>
 
 <body>
+
     <div class="fixed-sidebar">
         <h4>Contents</h4>
         <nav>
@@ -519,14 +647,14 @@
 
                 <div class="sub-tabs" id="sub-tabs-container"></div>
 
-                <div class="scene-control-bar">
+                <!-- <div class="scene-control-bar">
                     <div class="scene-group" id="scene-group-container">
                         </div>
                     <div class="instruction-text">
                         <i class="fas fa-arrows-alt-h"></i>
                         <span>Drag the vertical handle left or right to compare Good vs Bad cases. Click thumbnails to switch videos.</span>
                     </div>
-                </div>
+                </div> -->
 
                 <div id="visualizer-area">
                     <div class="video-compare-wrapper" id="primary-compare">
@@ -568,9 +696,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
+
+                </div>
+                <div class="scene-selection-area">
+                    <div class="scene-group" id="scene-group-container">
+                        </div>
+                </div>
             </div>
+
         </section>
     </main>
 
@@ -634,7 +768,7 @@
             "Controllability": {
                 folder: "Controllability",
                 subtasks: [
-                    { name: "Instruction Following", path: "Instruction_Following" },
+                    { name: "Instruction Following", path: "Instruction_Following", hasGT: true },
                     { name: "Semantic Alignment", path: "Semnatic_Alignment" }, // Keep typo as per tree
                     { name: "Action Following", path: "Action_Following", hasVideo2: true }
                 ]
@@ -670,6 +804,7 @@
             updateUI();
             setupSlider('slider-container-1', 'handle-1', 'layer-left-1', 'layer-right-1');
             setupSlider('slider-container-2', 'handle-2', 'layer-left-2', 'layer-right-2');
+            setupSidebarObserver();
         }
 
         function renderDimTabs() {
@@ -787,35 +922,147 @@
             const container = document.getElementById(containerId);
             const handle = document.getElementById(handleId);
             const layerLeft = document.getElementById(leftLayerId);
-            const layerRight = document.getElementById(rightLayerId);
+            // 右侧层因为用了 flex: 1，会自动填满剩余空间，不需要手动改宽度
+            
             let isDragging = false;
 
             function update(x) {
                 const rect = container.getBoundingClientRect();
-                let pct = (x - rect.left) / rect.width * 100;
-                pct = Math.max(0, Math.min(100, pct));
-                
+                let pct = ((x - rect.left) / rect.width) * 100;
+                pct = Math.max(0, Math.min(100, pct)); 
+
                 handle.style.left = `${pct}%`;
-                layerLeft.style.clipPath = `polygon(0 0, ${pct}% 0, ${pct}% 100%, 0 100%)`;
-                layerRight.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+                
+                // 只需改变左边宽度，右边 flex: 1 会自动响应
+                layerLeft.style.width = `${pct}%`;
+                
+                // 如果你发现右边视频还是不出来，强制刷新一下右边宽度（可选）
+                // layerRight.style.width = `${100 - pct}%`; 
             }
 
-            // Init center
-            update(container.getBoundingClientRect().left + container.getBoundingClientRect().width / 2);
+            // 初始化
+            setTimeout(() => {
+                const rect = container.getBoundingClientRect();
+                update(rect.left + rect.width / 2);
+            }, 100);
 
+            // 事件监听保持不变
             handle.addEventListener('mousedown', () => isDragging = true);
             window.addEventListener('mouseup', () => isDragging = false);
             window.addEventListener('mousemove', (e) => { if(isDragging) update(e.clientX); });
             
             handle.addEventListener('touchstart', () => isDragging = true);
             window.addEventListener('touchend', () => isDragging = false);
-            window.addEventListener('touchmove', (e) => { if(isDragging) update(e.touches[0].clientX); });
-            
-            container.addEventListener('click', (e) => update(e.clientX));
+            window.addEventListener('touchmove', (e) => { 
+                if(isDragging) update(e.touches[0].clientX); 
+            });
         }
 
-        // Start
+        function setupSidebarObserver() {
+            const sidebarLinks = document.querySelectorAll('.fixed-sidebar nav a');
+            const scrollProgress = document.querySelector('.scroll-progress');
+
+            // 1. 核心高亮逻辑：观察者模式
+            const observerOptions = {
+                root: null,
+                rootMargin: '-15% 0px -70% 0px', // 触发区域：屏幕上方15%到下方70%
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // 当章节进入视口指定区域
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        sidebarLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            // 绑定所有有 ID 的章节进行观察
+            sidebarLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const section = document.querySelector(href);
+                    if (section) observer.observe(section);
+                }
+            });
+
+            // 2. 点击平滑滚动（解决遮挡问题）
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        const headerOffset = 100; // 如果你顶部有固定导航栏，请调整这个高度
+                        const elementPosition = targetSection.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 3. 顶部滚动进度条（如果有的话）
+            window.addEventListener('scroll', () => {
+                const winScroll = document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                if (scrollProgress) {
+                    scrollProgress.style.transform = `scaleX(${scrolled / 100})`;
+                }
+            });
+        }
+
+        function renderScenes() {
+            sceneGroup.innerHTML = '';
+            // 循环生成 0, 1, 2 三个场景按钮
+            [0, 1, 2].forEach(i => {
+                // 创建包裹容器
+                const item = document.createElement('div');
+                item.className = `scene-item ${i === curScene ? 'active' : ''}`;
+                
+                // 判断图片后缀
+                const ext = (curSub.path.includes('image_quality') || curSub.path.includes('map_seg')) ? 'png' : 'jpg';
+                const thumbPath = `${BASE_PATH}/${DATA[curDim].folder}/${curSub.path}/${i}/good/00000.${ext}`;
+                
+                // 创建图片元素
+                const img = document.createElement('img');
+                img.className = 'scene-thumb';
+                img.src = thumbPath;
+                
+                // 创建文字标注 (Task 1, Task 2...)
+                const label = document.createElement('span');
+                label.className = 'scene-label';
+                label.textContent = `Task ${i + 1}`;
+                
+                // 组合并绑定点击事件
+                item.appendChild(img);
+                item.appendChild(label);
+                
+                item.onclick = () => {
+                    curScene = i;
+                    renderScenes(); // 重新渲染以更新 active 状态
+                    loadVideos();   // 加载对应的视频
+                };
+                
+                sceneGroup.appendChild(item);
+            });
+        }
+
+        // 确保 DOM 加载完后启动
         document.addEventListener('DOMContentLoaded', init);
+
 
     </script>
 </body>
