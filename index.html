@@ -1,183 +1,871 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WorldArena</title>
-  <meta name="description" content="WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models" />
+    <head>
+        <title>WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models</title>
 
-  <style>
-    :root {
-      --bg: #0b0e14;
-      --panel: #111622;
-      --text: #e6e8ef;
-      --muted: #9aa1b2;
-      --accent: #6cf2c2;
-      --accent-2: #7aa2ff;
-    }
+        <link rel="icon" href="assets_common/icons/worldbench-circle.png" type="image/x-icon">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 20% -10%, #1a1f2f, transparent), var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+        <script src="./static/js/distill_template.v2.js"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
 
-    a:hover {
-      text-decoration: underline;
-    }
+        <script defer="" src="./static/js/hider.js"></script>
+        <script src="./static/js/image_interact.js"></script>
+        <script src="./static/js/switch_videos.js"></script>
 
-    header {
-      padding: 4rem 1.5rem 3rem;
-      text-align: center;
-    }
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/worldlens.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
 
-    header h1 {
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
-      letter-spacing: -0.02em;
-      margin-bottom: 0.8rem;
-    }
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
 
-    header p {
-      color: var(--muted);
-      max-width: 720px;
-      margin: 0 auto;
-      font-size: 1.05rem;
-    }
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        <script defer src="./static/js/medium-zoom.min.js"></script>
+        <script defer src="./static/js/zoom.js"></script>
 
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-      display: grid;
-      gap: 2rem;
-    }
+        <style>
+          .worldlens {
+            font-weight: bold;
+          }
+          .worldlens .w  { color: #34cccc; }
+          .worldlens .o  { color: #46cbbb; }
+          .worldlens .r  { color: #5fcaa1; }
+          .worldlens .l  { color: #77c888; }
+          .worldlens .d  { color:	#9bc765; }
+          .worldlens .l2 { color: #b9c546; }
+          .worldlens .e  { color: #e3c21c; }
+          .worldlens .n  { color:	#f3c10c; }
+          .worldlens .s  { color: #ffc000; }
+        </style>
 
-    .card {
-      background: linear-gradient(180deg, #151a2b, var(--panel));
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 1.8rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    }
+        <style>
+            /* 重置基础样式 */
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Rubik', sans-serif;
+                background-color: #f9fafb;
+                overflow-x: hidden;
+            }
+            
+            /* 左侧目录固定定位 */
+            .fixed-sidebar {
+                position: fixed;
+                left: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 180px;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                padding: 20px 15px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                z-index: 1000;
+                max-height: 75vh;
+                overflow-y: auto;
+            }
 
-    .card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 0.6rem;
-    }
+            .fixed-sidebar h4 {
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: #1e293b;
+                margin: 0 0 15px 0;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #e2e8f0;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
 
-    .card p {
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
+            .fixed-sidebar nav {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
+            .fixed-sidebar nav a {
+                font-size: 0.76rem;
+                color: #64748b;
+                text-decoration: none;
+                padding: 6px 10px;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                line-height: 1.4;
+                display: block;
+                border-left: 3px solid transparent;
+                font-weight: 500;
+            }
 
-    .tag {
-      display: inline-block;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: rgba(108,242,194,0.15);
-      color: var(--accent);
-      margin-right: 0.4rem;
-    }
+            .fixed-sidebar nav a:hover {
+                color: #2563eb;
+                background: rgba(37, 99, 235, 0.05);
+                border-left: 3px solid rgba(37, 99, 235, 0.5);
+                transform: translateX(3px);
+            }
 
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 2rem 1.5rem 3rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+            .fixed-sidebar nav a.active {
+                color: #1e40af;
+                font-weight: 700;
+                background: rgba(37, 99, 235, 0.1);
+                border-left: 3px solid #2563eb;
+                box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+            }
 
-    footer a {
-      color: var(--accent-2);
-    }
-  </style>
-</head>
-<body>
+            /* 隐藏原有的目录 */
+            d-contents {
+                display: none !important;
+            }
 
-  <header>
-    <h1>WorldArena</h1>
-    <p>
-      A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models
-    </p>
-  </header>
+            /* 主要内容区域 - 占据全宽，左侧留出目录空间 */
+            main {
+                margin-left: 220px; /* 左侧目录宽度 + 间距 */
+                margin-right: 40px;
+                max-width: calc(100% - 260px); /* 减去左右边距 */
+                padding: 20px;
+                box-sizing: border-box;
+            }
 
-  <main>
-    <section class="card">
-      <h2>🚀 What is WorldArena?</h2>
-      <p>
-        WorldArena is an open research space for exploring large-scale world models, diffusion-based video generation,
-        and policy learning grounded in visual dynamics.
-      </p>
-      <span class="tag">World Models</span>
-      <span class="tag">Video Diffusion</span>
-      <span class="tag">Embodied AI</span>
-    </section>
+            /* 卡片样式 - 全宽 */
+            .card {
+                background: white;
+                border-radius: 12px;
+                padding: 2.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                margin-bottom: 3rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
 
-    <section class="grid">
-      <div class="card">
-        <h2>📄 Projects</h2>
-        <p>
-          Research projects, codebases, and experimental pipelines hosted under the WorldArena umbrella.
-        </p>
-        <p>
-          <a href="https://github.com/worldarena" target="_blank">→ View GitHub Organization</a>
-        </p>
-      </div>
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            }
 
-      <div class="card">
-        <h2>📊 Benchmarks</h2>
-        <p>
-          Evaluation protocols for long-horizon video prediction, physical consistency, and controllability.
-        </p>
-      </div>
+            .card-title {
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                color: #1e293b;
+            }
 
-      <div class="card">
-        <h2>🧠 Ideas & Notes</h2>
-        <p>
-          Design notes, negative results, and emerging ideas around DiT, VAE, and policy-conditioned generation.
-        </p>
-      </div>
-    </section>
+            /* 标题区域 */
+            .hero-section {
+                width: 100%;
+                min-height: 85vh;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: white;
+                padding: 60px 20px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .hero-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .main-title {
+                font-size: 4rem;
+                font-weight: 800;
+                margin-bottom: 1.5rem;
+                text-transform: uppercase;
+                letter-spacing: -0.5px;
+                line-height: 1.1;
+                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            
+            .subtitle {
+                font-size: 1.6rem;
+                font-weight: 300;
+                max-width: 800px;
+                margin: 0 auto 3rem;
+                opacity: 0.95;
+                line-height: 1.4;
+            }
+            
+            .action-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-top: 3rem;
+            }
+            
+            .btn {
+                padding: 14px 32px;
+                border-radius: 50px;
+                font-weight: 600;
+                font-size: 1rem;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+            }
+            
+            .btn-primary {
+                background: white;
+                color: #1e293b;
+            }
+            
+            .btn-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            }
+            
+            .btn-secondary {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                color: white;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-3px);
+            }
 
-    <section class="card">
-      <h2>📬 Contact</h2>
-      <p>
-        Interested in collaboration or discussion? Reach out via GitHub or open an issue.
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/worldarena" target="_blank">github.com/worldarena</a>
-      </p>
-    </section>
-  </main>
+            /* 章节标题 */
+            .section-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: #1e293b;
+                position: relative;
+                padding-bottom: 15px;
+            }
+            
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 80px;
+                height: 4px;
+                background: #2563eb;
+                border-radius: 2px;
+            }
+            
+            .section-subtitle {
+                font-size: 1.3rem;
+                color: #64748b;
+                margin-bottom: 3rem;
+                line-height: 1.6;
+            }
 
-  <footer>
-    <p>
-      © <span id="year"></span> WorldArena · Built with GitHub Pages
-    </p>
-  </footer>
+            /* 图片样式 */
+            .perceptual-image {
+                width: 100%;
+                max-width: 100%;
+                margin: 2rem 0;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                display: block;
+            }
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+            /* 指标网格 */
+            .metrics-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                margin-top: 2rem;
+            }
+            
+            .metric-category {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 1.5rem;
+                border-left: 4px solid #2563eb;
+            }
+            
+            .metric-category h4 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                color: #1e293b;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .metric-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .metric-list li {
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #e2e8f0;
+                color: #64748b;
+                font-size: 0.95rem;
+            }
+            
+            .metric-list li:last-child {
+                border-bottom: none;
+            }
 
-</body>
+            /* 公式样式 */
+            .formula-box {
+                background: #f8fafc;
+                padding: 2rem;
+                border-radius: 8px;
+                margin: 2rem 0;
+                font-family: 'Courier New', monospace;
+                font-size: 1.1rem;
+                text-align: center;
+                border: 2px dashed #cbd5e1;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* 页脚 */
+            .footer {
+                background: #1e293b;
+                color: white;
+                padding: 60px 20px;
+                text-align: center;
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .footer-content {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .citation-box {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 2rem;
+                border-radius: 8px;
+                margin: 2rem 0;
+                text-align: left;
+                font-family: 'Courier New', monospace;
+                font-size: 0.9rem;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow-x: auto;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* 响应式设计 */
+            @media (max-width: 1200px) {
+                .fixed-sidebar {
+                    display: none;
+                }
+                
+                main {
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    max-width: 100%;
+                    padding: 20px;
+                }
+                
+                .hero-section {
+                    padding: 40px 20px;
+                }
+                
+                .main-title {
+                    font-size: 3rem;
+                }
+                
+                .subtitle {
+                    font-size: 1.3rem;
+                }
+                
+                .section-title {
+                    font-size: 2rem;
+                }
+                
+                .section-subtitle {
+                    font-size: 1.1rem;
+                }
+                
+                .metrics-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            
+            @media (max-width: 768px) {
+                main {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    padding: 10px;
+                }
+                
+                .card {
+                    padding: 1.5rem;
+                }
+                
+                .metrics-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .hero-section {
+                    min-height: 70vh;
+                    padding: 30px 15px;
+                }
+                
+                .main-title {
+                    font-size: 2.5rem;
+                }
+                
+                .subtitle {
+                    font-size: 1.1rem;
+                }
+                
+                .action-buttons {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                
+                .btn {
+                    width: 100%;
+                    max-width: 300px;
+                    justify-content: center;
+                }
+                
+                .footer {
+                    padding: 40px 15px;
+                }
+            }
+
+            /* WorldArena 徽章 */
+            .worldarena-badge {
+                display: inline-block;
+                padding: 6px 16px;
+                background: #2563eb;
+                color: white;
+                border-radius: 20px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            /* 高亮框 */
+            .highlight-box {
+                background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+                border-left: 5px solid #2563eb;
+                padding: 2rem;
+                border-radius: 8px;
+                margin: 2rem 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .highlight-box h4 {
+                color: #2563eb;
+                margin-bottom: 1rem;
+                font-size: 1.4rem;
+            }
+
+            /* 标题区域 */
+            .caption {
+                text-align: center;
+                color: #64748b;
+                font-style: italic;
+                margin-top: 1rem;
+                font-size: 0.95rem;
+            }
+
+            /* 滚动进度条 */
+            .scroll-progress {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(to right, #2563eb, #7c3aed);
+                transform-origin: left;
+                transform: scaleX(0);
+                z-index: 9999;
+                transition: transform 0.1s ease;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- 顶部滚动进度条 -->
+        <div class="scroll-progress"></div>
+        
+        <!-- 左侧固定目录 -->
+        <div class="fixed-sidebar">
+            <h4>Contents</h4>
+            <nav>
+                <div><a href="#overview" class="active">Overview</a></div>
+                <div><a href="#comparison">Benchmark Comparison</a></div>
+                <div><a href="#architecture">Core Architecture</a></div>
+                <div><a href="#definition">Evaluation Protocol</a></div>
+                <div><a href="#taxonomy">Taxonomy</a></div>
+                <div><a href="#models">Benchmarked Models</a></div>
+                <div><a href="#leaderboard">Leaderboard</a></div>
+                <div><a href="#examples">Visualization Arena</a></div>
+                <div><a href="#citation">Citation & Contact</a></div>
+            </nav>
+        </div>
+
+        <!-- WorldArena 标题区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="main-title">WORLDARENA</h1>
+                <p class="subtitle">
+                    A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models
+                </p>
+                <div class="action-buttons">
+                    <a href="assets_common/papers/WorldArena.pdf" class="btn btn-primary" target="_blank">
+                        <i class="ai ai-arxiv"></i> Paper PDF
+                    </a>
+                    <a href="https://github.com/worldarena/WorldArena" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://huggingface.co/spaces/WorldArena/WorldArena" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-trophy"></i> Leaderboard
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <main>
+            <!-- Overview 部分 -->
+            <section id="overview">
+                <h2 class="section-title">Overview</h2>
+                <p class="section-subtitle">
+                    WorldArena is a unified benchmark designed to systematically evaluate embodied world models across both perceptual and functional dimensions.
+                </p>
+                
+                <div class="card">
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        WorldArena assesses models through three dimensions: <strong style="color: #2563eb;">video perception quality</strong>, measured with sixteen metrics across six sub-dimensions; <strong style="color: #2563eb;">embodied task functionality</strong>, which evaluates world models as synthetic data engines, policy evaluators, and action planners integrating with subjective human evaluation. Furthermore, we propose <strong style="color: #2563eb;">EWMScore</strong>, a holistic metric integrating multi-dimensional performance into a single interpretable index. This work provides a framework for tracking progress toward truly functional world models in embodied AI.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Comparison with existing benchmarks -->
+            <section id="comparison">
+                <h2 class="section-title">Comparison with Existing Benchmarks</h2>
+                <p class="section-subtitle">
+                    Comprehensive comparison of WorldArena with other world model evaluation frameworks
+                </p>
+                
+                <!-- 图片部分 - 替换原来的表格 -->
+                <div class="card">
+                    <div style="text-align: center;">
+                        <img src="assets_common/photos/benchmark_comparison.png" alt="Benchmark Comparison" class="perceptual-image">
+                        <p class="caption">Figure 1: Comprehensive comparison of WorldArena with existing world model benchmarks</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Architecture 部分 -->
+            <section id="architecture">
+                <h2 class="section-title">Core Architecture</h2>
+                <p class="section-subtitle">
+                    WorldArena's comprehensive evaluation framework encompasses both perceptual quality and functional utility
+                </p>
+                
+                <!-- Perceptual Evaluation -->
+                <div class="card">
+                    <h3 class="card-title">Perceptual Evaluation</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        WorldArena measures multi-faceted video quality, comprising 16 numerical metrics across 6 key sub-dimensions:
+                    </p>
+                    
+                    <!-- 插入图片 -->
+                    <div>
+                        <img src="assets_common/photos/Perceptual evaluation.png" alt="Perceptual Evaluation Metrics" class="perceptual-image">
+                        <p class="caption">Figure 2: Six dimensions of perceptual evaluation with 16 specific metrics</p>
+                    </div>
+                    
+                    <!-- 指标网格 -->
+                    <div class="metrics-grid">
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">Visual Quality</span></h4>
+                            <ul class="metric-list">
+                                <li>Image Quality</li>
+                                <li>Aesthetic Quality</li>
+                                <li>JEPA Similarity</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">Motion Quality</span></h4>
+                            <ul class="metric-list">
+                                <li>Dynamic Degree</li>
+                                <li>Flow Score</li>
+                                <li>Motion Smoothness</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">Content Consistency</span></h4>
+                            <ul class="metric-list">
+                                <li>Subject Consist.</li>
+                                <li>Background Consist.</li>
+                                <li>Photometric Consist.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">Physics Adhere.</span></h4>
+                            <ul class="metric-list">
+                                <li>Interaction Quality</li>
+                                <li>Trajectory Acc.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">3D Acc.</span></h4>
+                            <ul class="metric-list">
+                                <li>Depth Acc.</li>
+                                <li>Perspectivity</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="metric-category">
+                            <h4><span class="worldarena-badge">Controllability</span></h4>
+                            <ul class="metric-list">
+                                <li>Instruction Following</li>
+                                <li>Semantic Alignment</li>
+                                <li>Action Following</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 修正后的EWMScore公式 -->
+                    <div class="formula-box">
+                        EWMScore = (Image Quality + Aesthetic Quality + JEPA Similarity + Dynamic Degree + Flow Score + Motion Smoothness + Subject Consist. + Background Consist. + Photometric Consist. + Interaction Quality + Trajectory Acc. + Depth Acc. + Perspectivity + Instruction Following + Semantic Alignment + Action Following) / 16<br>
+                        <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all 16 sub-metrics</small>
+                    </div>
+                </div>
+                
+                <!-- Embodied Task Functionality -->
+                <div class="card">
+                    <h3 class="card-title">Embodied Task Functionality</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        WorldArena evaluates model performance in three core areas: data synthesis, policy evaluation, and action planning.
+                    </p>
+                    
+                    <!-- 架构图 -->
+                    <div>
+                        <img src="assets_common/photos/Embodied_evaluation.png" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
+                        <p class="caption">Figure 3: Embodied Task Functionality Evaluation Framework</p>
+                    </div>
+                    
+                    <!-- 三个功能区域的详细解释 -->
+                    <div class="highlight-box">
+                        <h4>Embodied Data Engine</h4>
+                        <p style="line-height: 1.7;">
+                            We evaluate five representative embodied world models as data synthesis engines by measuring their impact on downstream policy learning. The evaluation is conducted on two manipulation tasks: <em>adjust bottle</em> (Task 1) and <em>click bell</em> (Task 2), each executed 100 times, with the success rate averaged. For each task, we train a π₀.₅ policy using 25 synthetic trajectories generated by each world model. Results show that synthetic data from most world models provides some performance gains across both tasks but still lags behind real data, indicating that current embodied world models are not yet reliable data sources for downstream learning.
+                        </p>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h4>Embodied Policy Evaluator</h4>
+                        <p style="line-height: 1.7;">
+                            We investigate whether world models can serve as proxy simulation environments for policy evaluation. To this end, we train five policy models π₀.₅ with varying performance levels. Each policy is then evaluated by interacting with an action-controllable world model, which generates observation rollouts conditioned on the policy's actions. Results show that CtrlWorld exhibits a strong correlation with the evaluation results from the RoboTwin simulator, indicating that it effectively captures meaningful environment transition dynamics. In contrast, Cosmos-Predict 2.5 shows a weaker correlation, suggesting that it struggles to accurately model the environment dynamics.
+                        </p>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h4>Embodied Action Planner</h4>
+                        <p style="line-height: 1.7;">
+                            Similar to the data engine task setting, we evaluate five representative embodied world models as end-to-end action planners by executing their predicted action sequences in the RoboTwin simulator. While several world models achieve non-trivial success rates across tasks, their overall performance remains substantially lower than that of VLA policies such as π₀.₅. These results indicate that, although current embodied world models capture useful predictive structure, they still struggle to reliably support closed-loop task execution, particularly over long horizons.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- EWMScore 综合指标 -->
+                <div class="card">
+                    <h3 class="card-title">EWMScore: Unified Evaluation Metric</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        We propose <strong style="color: #2563eb;">EWMScore</strong>, a holistic metric that integrates multi-dimensional performance into a single interpretable index. EWMScore combines perceptual quality scores with functional utility metrics, weighted by their importance for real-world deployment.
+                    </p>
+                    <div class="formula-box">
+                        EWMScore = α × PerceptionScore + β × FunctionalityScore + γ × HumanAlignmentScore
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leaderboard 部分 -->
+            <section id="leaderboard">
+                <h2 class="section-title">Leaderboard</h2>
+                <p class="section-subtitle">
+                    Real-time performance ranking of world models on the WorldArena benchmark
+                </p>
+                
+                <div class="card">
+                    <div style="width:100%; max-width:100%; margin:0 auto; overflow:hidden; border-radius: 12px;">
+                        <iframe
+                            src="https://worldarena-worldarena.hf.space"
+                            style="width:100%; height:720px; border:0; border-radius: 12px;"
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                        <h4 style="color: #2563eb; margin-bottom: 1rem;">
+                            <i class="fas fa-bullhorn"></i> Call for Participation
+                        </h4>
+                        <p style="line-height: 1.7;">
+                            We invite researchers and practitioners to submit their models for evaluation on the leaderboard, enabling consistent comparison and supporting progress in world model research.
+                            For more details, kindly refer to our <a href="https://github.com/worldarena/WorldArena" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">Evaluation Toolkit</a>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 其他部分保持原有内容 -->
+            <!-- 这里省略了其他部分，因为你说要简化 -->
+        </main>
+        
+        <!-- 页脚 -->
+        <section class="footer">
+            <div class="footer-content">
+                <h2 style="margin-bottom: 2rem;">Citation</h2>
+                
+                <div class="citation-box">
+@article{worldarena2025,
+  title={WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models},
+  author={WorldArena Team},
+  journal={arXiv preprint},
+  year={2025},
+  url={https://github.com/worldarena/WorldArena}
+}
+                </div>
+                
+                <div style="margin-top: 3rem;">
+                    <h3>Contact</h3>
+                    <p>For questions and suggestions, please contact: 
+                        <a href="mailto:worldarena.team@gmail.com" style="color: #60a5fa; text-decoration: none;">
+                            worldarena.team@gmail.com
+                        </a>
+                    </p>
+                    
+                    <div style="margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center;">
+                        <a href="https://github.com/worldarena" style="color: white; text-decoration: none;">
+                            <i class="fab fa-github fa-2x"></i>
+                        </a>
+                        <a href="https://arxiv.org" style="color: white; text-decoration: none;">
+                            <i class="ai ai-arxiv fa-2x"></i>
+                        </a>
+                        <a href="https://huggingface.co/spaces/WorldArena" style="color: white; text-decoration: none;">
+                            <i class="fas fa-trophy fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 3rem; opacity: 0.7;">
+                    © 2025 WorldArena Team. This website is licensed under a 
+                    <a href="https://creativecommons.org/licenses/by-sa/4.0/" style="color: #60a5fa; text-decoration: none;">
+                        Creative Commons Attribution-ShareAlike 4.0 International License
+                    </a>
+                </p>
+            </div>
+        </section>
+
+        <script>
+            // 左侧目录交互功能
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebarLinks = document.querySelectorAll('.fixed-sidebar nav a');
+                const sections = Array.from(sidebarLinks).map(link => {
+                    const href = link.getAttribute('href');
+                    return href ? document.querySelector(href) : null;
+                }).filter(section => section !== null);
+                
+                // 获取滚动进度条
+                const scrollProgress = document.querySelector('.scroll-progress');
+                
+                // 更新目录激活状态
+                function updateActiveSection() {
+                    let closestSection = null;
+                    let closestDistance = Infinity;
+                    
+                    const scrollPosition = window.scrollY + 100;
+                    
+                    sections.forEach(section => {
+                        if (section) {
+                            const sectionTop = section.offsetTop;
+                            const distance = Math.abs(scrollPosition - sectionTop);
+                            
+                            if (distance < closestDistance) {
+                                closestDistance = distance;
+                                closestSection = section;
+                            }
+                        }
+                    });
+                    
+                    // 更新目录激活状态
+                    sidebarLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (closestSection && link.getAttribute('href') === `#${closestSection.id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                    
+                    // 更新滚动进度条
+                    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const scrolled = (window.scrollY / scrollHeight) * 100;
+                    scrollProgress.style.transform = `scaleX(${scrolled / 100})`;
+                }
+                
+                // 添加平滑滚动
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        if (targetId.startsWith('#')) {
+                            const targetSection = document.querySelector(targetId);
+                            if (targetSection) {
+                                window.scrollTo({
+                                    top: targetSection.offsetTop - 100,
+                                    behavior: 'smooth'
+                                });
+                                
+                                sidebarLinks.forEach(l => l.classList.remove('active'));
+                                this.classList.add('active');
+                            }
+                        }
+                    });
+                });
+                
+                // 监听滚动事件
+                let isScrolling;
+                window.addEventListener('scroll', function() {
+                    window.clearTimeout(isScrolling);
+                    isScrolling = setTimeout(function() {
+                        updateActiveSection();
+                    }, 50);
+                }, false);
+                
+                // 初始更新
+                updateActiveSection();
+            });
+        </script>
+    </body>
 </html>
