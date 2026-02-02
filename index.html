@@ -1,1382 +1,822 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models</title>
+<head>
+    <title>WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models</title>
 
-        <link rel="icon" href="assets_common/icons/worldbench-circle.png" type="image/x-icon">
+    <link rel="icon" href="assets_common/icons/worldbench-circle.png" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="./static/js/distill_template.v2.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+    <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+
+    <script defer="" src="./static/js/hider.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="stylesheet" href="./static/css/worldarena.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script defer src="./static/js/medium-zoom.min.js"></script>
+    <script defer src="./static/js/zoom.js"></script>
+
+    <style>
+        /* --- 原有样式保留 --- */
+        .worldarena { font-weight: bold; }
+        .worldarena .w  { color: #34cccc; }
+        .worldarena .o  { color: #46cbbb; }
+        .worldarena .r  { color: #5fcaa1; }
+        .worldarena .l  { color: #77c888; }
+        .worldarena .d  { color: #9bc765; }
+        .worldarena .a { color: #b9c546; }
+        .worldarena .r  { color: #e3c21c; }
+        .worldarena .e  { color: #f3c10c; }
+        .worldarena .n  { color: #ffc000; }
+        .worldarena .a  { color: #ff9900; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Rubik', sans-serif;
+            background-color: #f9fafb;
+            overflow-x: hidden;
+        }
         
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        /* 侧边栏 */
+        .fixed-sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 180px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
 
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        .fixed-sidebar h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-        <script src="./static/js/distill_template.v2.js"></script>
-        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        .fixed-sidebar nav a {
+            display: block;
+            font-size: 0.76rem;
+            color: #64748b;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+            border-left: 3px solid transparent;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
 
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
-        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+        .fixed-sidebar nav a:hover {
+            color: #2563eb;
+            background: rgba(37, 99, 235, 0.05);
+            border-left: 3px solid rgba(37, 99, 235, 0.5);
+            transform: translateX(3px);
+        }
 
-        <script defer="" src="./static/js/hider.js"></script>
-        <script src="./static/js/image_interact.js"></script>
-        <script src="./static/js/switch_videos.js"></script>
+        .fixed-sidebar nav a.active {
+            color: #1e40af;
+            font-weight: 700;
+            background: rgba(37, 99, 235, 0.1);
+            border-left: 3px solid #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        }
 
-        <link rel="stylesheet" href="./static/css/style.css">
-        <link rel="stylesheet" href="./static/css/worldarena.css">
-        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+        d-contents { display: none !important; }
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-            onload="renderMathInElement(document.body);"></script>
-        <script defer src="./static/js/fontawesome.all.min.js"></script>
+        main {
+            margin-left: 220px;
+            margin-right: 40px;
+            max-width: calc(100% - 260px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-        <script defer src="./static/js/medium-zoom.min.js"></script>
-        <script defer src="./static/js/zoom.js"></script>
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .fixed-sidebar { display: none; }
+            main { margin: 0 auto; max-width: 1000px; padding: 20px; }
+        }
 
-        <style>
-          .worldarena {
-            font-weight: bold;
-          }
-          .worldarena .w  { color: #34cccc; }
-          .worldarena .o  { color: #46cbbb; }
-          .worldarena .r  { color: #5fcaa1; }
-          .worldarena .l  { color: #77c888; }
-          .worldarena .d  { color:	#9bc765; }
-          .worldarena .a { color: #b9c546; }
-          .worldarena .r  { color: #e3c21c; }
-          .worldarena .e  { color:	#f3c10c; }
-          .worldarena .n  { color: #ffc000; }
-          .worldarena .a  { color: #ff9900; }
-        </style>
+        /* 卡片基础 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 3rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-        <style>
-            /* 重置基础样式 */
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: 'Rubik', sans-serif;
-                background-color: #f9fafb;
-                overflow-x: hidden;
-            }
-            
-            /* 左侧目录固定定位 */
-            .fixed-sidebar {
-                position: fixed;
-                left: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 180px;
-                background: rgba(255, 255, 255, 0.98);
-                backdrop-filter: blur(10px);
-                border-radius: 12px;
-                padding: 20px 15px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                border: 1px solid rgba(0, 0, 0, 0.06);
-                z-index: 1000;
-                max-height: 75vh;
-                overflow-y: auto;
-            }
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
 
-            .fixed-sidebar h4 {
-                font-size: 0.85rem;
-                font-weight: 700;
-                color: #1e293b;
-                margin: 0 0 15px 0;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #e2e8f0;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-            }
-
-            .fixed-sidebar nav {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .fixed-sidebar nav a {
-                font-size: 0.76rem;
-                color: #64748b;
-                text-decoration: none;
-                padding: 6px 10px;
-                border-radius: 6px;
-                transition: all 0.2s ease;
-                line-height: 1.4;
-                display: block;
-                border-left: 3px solid transparent;
-                font-weight: 500;
-            }
-
-            .fixed-sidebar nav a:hover {
-                color: #2563eb;
-                background: rgba(37, 99, 235, 0.05);
-                border-left: 3px solid rgba(37, 99, 235, 0.5);
-                transform: translateX(3px);
-            }
-
-            .fixed-sidebar nav a.active {
-                color: #1e40af;
-                font-weight: 700;
-                background: rgba(37, 99, 235, 0.1);
-                border-left: 3px solid #2563eb;
-                box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
-            }
-
-            /* 隐藏原有的目录 */
-            d-contents {
-                display: none !important;
-            }
-
-            /* 主要内容区域 - 占据全宽，左侧留出目录空间 */
-            main {
-                margin-left: 220px; /* 左侧目录宽度 + 间距 */
-                margin-right: 40px;
-                max-width: calc(100% - 260px); /* 减去左右边距 */
-                padding: 20px;
-                box-sizing: border-box;
-            }
-
-            /* 卡片样式 - 全宽 */
-            .card {
-                background: white;
-                border-radius: 12px;
-                padding: 2.5rem;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                margin-bottom: 3rem;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-            }
-
-            .card-title {
-                font-size: 1.8rem;
-                font-weight: 600;
-                margin-bottom: 1.5rem;
-                color: #1e293b;
-            }
-
-            /* 标题区域 */
-            .hero-section {
-                width: 100%;
-                min-height: 85vh;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                color: white;
-                padding: 60px 20px;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .hero-content {
-                max-width: 1200px;
-                margin: 0 auto;
-                position: relative;
-                z-index: 2;
-            }
-            
-            .main-title {
-                font-size: 4rem;
-                font-weight: 800;
-                margin-bottom: 1.5rem;
-                text-transform: uppercase;
-                letter-spacing: -0.5px;
-                line-height: 1.1;
-                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            }
-            
-            .subtitle {
-                font-size: 1.6rem;
-                font-weight: 300;
-                max-width: 800px;
-                margin: 0 auto 3rem;
-                opacity: 0.95;
-                line-height: 1.4;
-            }
-            
-            .action-buttons {
-                display: flex;
-                gap: 1rem;
-                justify-content: center;
-                flex-wrap: wrap;
-                margin-top: 3rem;
-            }
-            
-            .btn {
-                padding: 14px 32px;
-                border-radius: 50px;
-                font-weight: 600;
-                font-size: 1rem;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                transition: all 0.3s ease;
-                border: none;
-                cursor: pointer;
-            }
-            
-            .btn-primary {
-                background: white;
-                color: #1e293b;
-            }
-            
-            .btn-primary:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            }
-            
-            .btn-secondary {
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                color: white;
-                border: 2px solid rgba(255, 255, 255, 0.3);
-            }
-            
-            .btn-secondary:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: translateY(-3px);
-            }
-
-            /* 章节标题 */
-            .section-title {
-                font-size: 2.5rem;
-                font-weight: 700;
-                margin-bottom: 1.5rem;
-                color: #1e293b;
-                position: relative;
-                padding-bottom: 15px;
-            }
-            
-            .section-title::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 80px;
-                height: 4px;
-                background: #2563eb;
-                border-radius: 2px;
-            }
-            
-            .section-subtitle {
-                font-size: 1.3rem;
-                color: #64748b;
-                margin-bottom: 3rem;
-                line-height: 1.6;
-            }
-
-            /* 图片样式 */
-            .perceptual-image {
-                width: 100%;
-                max-width: 100%;
-                margin: 2rem 0;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                display: block;
-            }
-
-            /* 指标网格 */
-            .metrics-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-                margin-top: 2rem;
-            }
-            
-            .metric-category {
-                background: #f8fafc;
-                border-radius: 8px;
-                padding: 1.5rem;
-                border-left: 4px solid #2563eb;
-            }
-            
-            .metric-category h4 {
-                font-size: 1.2rem;
-                margin-bottom: 1rem;
-                color: #1e293b;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            
-            .metric-list {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .metric-list li {
-                padding: 0.5rem 0;
-                border-bottom: 1px solid #e2e8f0;
-                color: #64748b;
-                font-size: 0.95rem;
-            }
-            
-            .metric-list li:last-child {
-                border-bottom: none;
-            }
-
-            /* 公式样式 */
-            .formula-box {
-                background: #f8fafc;
-                padding: 2rem;
-                border-radius: 8px;
-                margin: 2rem 0;
-                font-family: 'Courier New', monospace;
-                font-size: 1.1rem;
-                text-align: center;
-                border: 2px dashed #cbd5e1;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            /* 页脚 */
-            .footer {
-                background: #1e293b;
-                color: white;
-                padding: 60px 20px;
-                text-align: center;
-                width: 100%;
-                margin-left: 0;
-                margin-right: 0;
-            }
-            
-            .footer-content {
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            
-            .citation-box {
-                background: rgba(255, 255, 255, 0.1);
-                padding: 2rem;
-                border-radius: 8px;
-                margin: 2rem 0;
-                text-align: left;
-                font-family: 'Courier New', monospace;
-                font-size: 0.9rem;
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                overflow-x: auto;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .videogen-compare {
-                width: 100%;
-                margin: 0 auto;
-            }
-            
-            .video-hero {
-                position: relative;
-                width: 100%;
-                overflow: hidden;
-                border-radius: 8px;
-                background: #000;
-            }
-            
-            .video-compare-split {
-                position: relative;
-                width: 100%;
-                overflow: hidden;
-                cursor: col-resize;
-                aspect-ratio: 16 / 9;
-            }
-            
-            .video-wrapper {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-            
-            .video-el {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-            }
-            
-            .gt-layer {
-                clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-            }
-            
-            .gen-layer {
-                clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
-            }
-            
-            /* 修正视频标签样式 - 改为半透明背景，位置调整 */
-            .video-label {
-                position: absolute;
-                top: 16px;
-                padding: 6px 12px;
-                background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
-                color: rgba(255, 255, 255, 0.9); /* 稍微透明的白色文字 */
-                font-size: 0.85rem;
-                border-radius: 4px;
-                pointer-events: none;
-                z-index: 10;
-                font-weight: 500;
-                backdrop-filter: blur(4px); /* 毛玻璃效果 */
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                transition: all 0.3s ease;
-            }
-            
-            .video-label:hover {
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-            }
-            
-            .label-left {
-                left: 16px;
-            }
-            
-            .label-right {
-                right: 16px;
-            }
-            
-            .split-handle {
-                position: absolute;
-                left: 50%;
-                top: 0;
-                bottom: 0;
-                width: 40px;
-                margin-left: -20px;
-                cursor: col-resize;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 20;
-            }
-            
-            .handle-line {
-                position: absolute;
-                left: 50%;
-                top: 0;
-                bottom: 0;
-                width: 2px;
-                background: rgba(255, 255, 255, 0.8);
-                transform: translateX(-50%);
-                box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-            }
-            
-            .handle-arrows {
-                position: relative;
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.95);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-                transition: all 0.2s ease;
-            }
-            
-            .handle-arrows:hover {
-                background: white;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                transform: scale(1.05);
-            }
-            
-            .handle-arrows svg {
-                color: #333;
-            }
-            
-            .thumb-bar {
-                display: flex;
-                gap: 1rem;
-                margin-top: 1.5rem;
-                padding-bottom: 1rem;
-                overflow-x: auto;
-                justify-content: center;
-            }
-            
-            .thumb {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 8px;
-                border: 2px solid transparent;
-                border-radius: 8px;
-                background: transparent;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                min-width: 100px;
-            }
-            
-            .thumb:hover {
-                background: rgba(37, 99, 235, 0.05);
-                border-color: rgba(37, 99, 235, 0.2);
-                transform: translateY(-2px);
-            }
-            
-            .thumb.is-active {
-                border-color: #2563eb;
-                background: rgba(37, 99, 235, 0.1);
-                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-            }
-            
-            .thumb img {
-                width: 100%;
-                height: 70px;
-                object-fit: cover;
-                border-radius: 4px;
-                border: 2px solid transparent;
-                transition: all 0.2s ease;
-            }
-            
-            .thumb:hover img {
-                border-color: rgba(37, 99, 235, 0.3);
-            }
-            
-            .thumb.is-active img {
-                border-color: #2563eb;
-            }
-            
-            .thumb span {
-                margin-top: 8px;
-                font-size: 0.85rem;
-                color: #64748b;
-                font-weight: 500;
-            }
-            
-            /* 维度选择器样式 */
-            .dimension-selector {
-                display: flex;
-                gap: 0.75rem;
-                flex-wrap: wrap;
-                margin-bottom: 2rem;
-                justify-content: center;
-            }
-            
-            .dimension-btn {
-                padding: 8px 20px;
-                background: white;
-                border: 2px solid #e2e8f0;
-                border-radius: 25px;
-                font-weight: 500;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                color: #64748b;
-                font-size: 0.9rem;
-            }
-            
-            .dimension-btn:hover {
-                border-color: #2563eb;
-                color: #2563eb;
-                transform: translateY(-2px);
-            }
-            
-            .dimension-btn.active {
-                background: #2563eb;
-                color: white;
-                border-color: #2563eb;
-                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            }
-
-            /* 响应式设计 */
-            @media (max-width: 1200px) {
-                .fixed-sidebar {
-                    display: none;
-                }
-                
-                main {
-                    margin-left: 20px;
-                    margin-right: 20px;
-                    max-width: 100%;
-                    padding: 20px;
-                }
-                
-                .hero-section {
-                    padding: 40px 20px;
-                }
-                
-                .main-title {
-                    font-size: 3rem;
-                }
-                
-                .subtitle {
-                    font-size: 1.3rem;
-                }
-                
-                .section-title {
-                    font-size: 2rem;
-                }
-                
-                .section-subtitle {
-                    font-size: 1.1rem;
-                }
-                
-                .metrics-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-            
-            @media (max-width: 768px) {
-                main {
-                    margin-left: 10px;
-                    margin-right: 10px;
-                    padding: 10px;
-                }
-                
-                .card {
-                    padding: 1.5rem;
-                }
-                
-                .metrics-grid {
-                    grid-template-columns: 1fr;
-                }
-                
-                .hero-section {
-                    min-height: 70vh;
-                    padding: 30px 15px;
-                }
-                
-                .main-title {
-                    font-size: 2.5rem;
-                }
-                
-                .subtitle {
-                    font-size: 1.1rem;
-                }
-                
-                .action-buttons {
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                .btn {
-                    width: 100%;
-                    max-width: 300px;
-                    justify-content: center;
-                }
-                
-                .footer {
-                    padding: 40px 15px;
-                }
-
-                .video-label {
-                    font-size: 0.75rem;
-                    padding: 4px 8px;
-                    top: 12px;
-                }
-                
-                .dimension-btn {
-                    padding: 6px 16px;
-                    font-size: 0.85rem;
-                }
-                
-                .thumb {
-                    min-width: 80px;
-                }
-                
-                .thumb img {
-                    height: 60px;
-                }
-            }
-
-
-
-            /* WorldArena 徽章 */
-            .worldarena-badge {
-                display: inline-block;
-                padding: 6px 16px;
-                background: #2563eb;
-                color: white;
-                border-radius: 20px;
-                font-size: 0.95rem;
-                font-weight: 600;
-                margin-right: 10px;
-                margin-bottom: 10px;
-            }
-
-            /* 高亮框 */
-            .highlight-box {
-                background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-                border-left: 5px solid #2563eb;
-                padding: 2rem;
-                border-radius: 8px;
-                margin: 2rem 0;
-                width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .highlight-box h4 {
-                color: #2563eb;
-                margin-bottom: 1rem;
-                font-size: 1.4rem;
-            }
-
-            /* 标题区域 */
-            .caption {
-                text-align: center;
-                color: #64748b;
-                font-style: italic;
-                margin-top: 1rem;
-                font-size: 0.95rem;
-            }
-
-            /* 滚动进度条 */
-            .scroll-progress {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 3px;
-                background: linear-gradient(to right, #2563eb, #7c3aed);
-                transform-origin: left;
-                transform: scaleX(0);
-                z-index: 9999;
-                transition: transform 0.1s ease;
-            }
-        </style>
-    </head>
-
-    <body>
-        <!-- 顶部滚动进度条 -->
-        <div class="scroll-progress"></div>
+        /* Header / Hero */
+        .hero-section {
+            width: 100%;
+            min-height: 70vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+            position: relative;
+        }
         
-        <!-- 左侧固定目录 -->
-        <div class="fixed-sidebar">
-            <h4>Contents</h4>
-            <nav>
-                <div><a href="#overview" class="active">Overview</a></div>
-                <div><a href="#comparison">Benchmark Comparison</a></div>
-                <div><a href="#architecture">Core Architecture</a></div>
-                <div><a href="#definition">Evaluation Protocol</a></div>
-                <div><a href="#taxonomy">Taxonomy</a></div>
-                <div><a href="#models">Benchmarked Models</a></div>
-                <div><a href="#leaderboard">Leaderboard</a></div>
-                <div><a href="#examples">Visualization Arena</a></div>
-                <div><a href="#citation">Citation & Contact</a></div>
-            </nav>
+        .main-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary { background: white; color: #1e293b; }
+        .btn-secondary { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .section-title::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 4px; background: #2563eb;
+        }
+        .section-subtitle { font-size: 1.2rem; color: #64748b; margin-bottom: 2.5rem; }
+
+        .perceptual-image { width: 100%; border-radius: 12px; margin: 2rem 0; }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;
+        }
+        .metric-category {
+            background: #f8fafc; border-radius: 8px; padding: 1.5rem; border-left: 4px solid #2563eb;
+        }
+        .metric-category h4 { margin: 0 0 1rem 0; color: #1e293b; }
+        .metric-list { list-style: none; padding: 0; margin: 0; }
+        .metric-list li { padding: 6px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem; }
+
+        .worldarena-badge {
+            background: #2563eb; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; margin-right: 8px;
+        }
+
+        .formula-box {
+            background: #f1f5f9; padding: 1.5rem; border-radius: 8px; font-family: monospace; text-align: center; border: 1px dashed #cbd5e1; margin-top: 2rem;
+        }
+
+        .highlight-box {
+            background: #eff6ff; border-left: 4px solid #2563eb; padding: 1.5rem; margin: 1.5rem 0; border-radius: 6px;
+        }
+
+        /* ----------------------------------------------------------- */
+        /* --- VISUALIZATION ARENA STYLES (New & Critical) --- */
+        /* ----------------------------------------------------------- */
+
+        /* 1. Dimension Tabs (Visual Quality, Motion Quality...) */
+        .dim-tabs {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;
+        }
+        .dim-btn {
+            padding: 10px 20px; background: white; border: 1px solid #e2e8f0; border-radius: 30px;
+            cursor: pointer; font-weight: 500; color: #64748b; transition: all 0.2s;
+        }
+        .dim-btn:hover { border-color: #2563eb; color: #2563eb; }
+        .dim-btn.active { background: #2563eb; color: white; border-color: #2563eb; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+
+        /* 2. Sub-Dimension Tabs (Image Quality, etc.) */
+        .sub-tabs {
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 25px;
+            background: #f8fafc; padding: 15px; border-radius: 12px;
+        }
+        .sub-btn {
+            padding: 8px 16px; background: white; border: 1px solid #cbd5e1; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; color: #475569; transition: all 0.2s;
+        }
+        .sub-btn.active {
+            background: #e0f2fe; color: #0284c7; border-color: #0284c7; font-weight: 600;
+        }
+
+        /* 3. Scene Selection & Instructions */
+        .scene-control-bar {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .scene-group { display: flex; gap: 8px; }
+        .scene-thumb {
+            width: 70px; height: 50px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; object-fit: cover; opacity: 0.7; transition: all 0.2s;
+        }
+        .scene-thumb:hover { opacity: 1; transform: scale(1.05); }
+        .scene-thumb.active { border-color: #2563eb; opacity: 1; box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }
+
+        .instruction-text {
+            font-size: 0.85rem; color: #64748b; display: flex; align-items: center; gap: 6px;
+            background: #f1f5f9; padding: 6px 12px; border-radius: 20px;
+        }
+        .instruction-text i { color: #2563eb; }
+
+        /* 4. Video Comparison Container */
+        .video-compare-wrapper {
+            position: relative; width: 100%; max-width: 800px; margin: 0 auto 30px auto;
+        }
+
+        /* The Slider Box */
+        .slider-container {
+            position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 10px;
+        }
+        .video-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;
+        }
+        .video-layer video {
+            width: 100%; height: 100%; object-fit: contain; pointer-events: none;
+        }
+        
+        /* Labels: Bottom Corners, Small, Semi-transparent */
+        .video-label {
+            position: absolute; bottom: 8px; padding: 2px 8px;
+            background: rgba(0, 0, 0, 0.6); color: rgba(255, 255, 255, 0.9);
+            font-size: 11px; font-weight: 500; border-radius: 4px; pointer-events: none; z-index: 10;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .label-left { left: 8px; }
+        .label-right { right: 8px; }
+
+        /* Handle */
+        .slider-handle {
+            position: absolute; top: 0; bottom: 0; width: 2px; background: white; z-index: 20; cursor: ew-resize;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .slider-circle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 32px; height: 32px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3); color: #333; font-size: 14px;
+        }
+
+        /* Extra Videos Container (GT or Video 2) */
+        .extra-video-container {
+            margin-top: 15px; text-align: center;
+        }
+        .extra-label {
+            font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 5px; display: block;
+        }
+        .gt-video-box {
+            display: inline-block; width: 100%; max-width: 400px; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0;
+        }
+        .gt-video-box video { width: 100%; display: block; }
+
+        /* Footer */
+        .footer { background: #1e293b; color: white; padding: 60px 20px; text-align: center; margin-top: 60px; }
+        .footer a { color: #60a5fa; text-decoration: none; }
+
+    </style>
+</head>
+
+<body>
+    <div class="fixed-sidebar">
+        <h4>Contents</h4>
+        <nav>
+            <a href="#overview" class="active">Overview</a>
+            <a href="#comparison">Benchmark Comparison</a>
+            <a href="#architecture">Core Architecture</a>
+            <a href="#leaderboard">Leaderboard</a>
+            <a href="#examples">Visualization Arena</a>
+        </nav>
+    </div>
+
+    <section class="hero-section">
+        <div>
+            <h1 class="main-title">WORLDARENA</h1>
+            <p class="subtitle">A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models</p>
+            <div class="action-buttons">
+                <a href="https://github.com/worldarena/WorldArena" class="btn btn-secondary" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://huggingface.co/spaces/WorldArena/WorldArena" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-trophy"></i> Leaderboard
+                </a>
+            </div>
         </div>
+    </section>
 
-        <!-- WorldArena 标题区域 -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1 class="main-title">WORLDARENA</h1>
-                <p class="subtitle">
-                    A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models
+    <main>
+        <section id="overview">
+            <h2 class="section-title">Overview</h2>
+            <div class="card">
+                <p style="font-size: 1.1rem; line-height: 1.8; color: #334155;">
+                    <strong style="color: #2563eb;">WorldArena</strong> is a unified benchmark designed to systematically evaluate embodied world models across both <strong style="color: #2563eb;">perceptual</strong> and <strong style="color: #2563eb;">functional</strong> dimensions. WorldArena assesses models through three dimensions: <strong style="color: #2563eb;">video perception quality</strong>, measured with sixteen metrics across six sub-dimensions; <strong style="color: #2563eb;">embodied task functionality</strong>, which evaluates world models as synthetic data engines, policy evaluators, and action planners. Furthermore, we propose <strong style="color: #2563eb;">EWMScore</strong>, a holistic metric integrating multi-dimensional performance into a single interpretable index.This work provides a framework for tracking progress toward truly functional world models in embodied AI.
                 </p>
-                <div class="action-buttons">
-                    <!-- <a href="assets_common/papers/WorldArena.pdf" class="btn btn-primary" target="_blank">
-                        <i class="ai ai-arxiv"></i> Paper PDF
-                    </a> -->
-                    <a href="https://github.com/worldarena/WorldArena" class="btn btn-secondary" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="https://huggingface.co/spaces/WorldArena/WorldArena" class="btn btn-secondary" target="_blank">
-                        <i class="fas fa-trophy"></i> Leaderboard
-                    </a>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2 class="section-title">Comparison with Existing Benchmarks</h2>
+            <div class="card" style="text-align: center;">
+                <img src="assets_common/photos/benchmark_comparison.png" alt="Benchmark Comparison" class="perceptual-image">
+                <p style="color: #64748b; font-style: italic;">Figure 1: Comprehensive comparison of WorldArena with existing world model benchmarks</p>
+            </div>
+        </section>
+
+        <section id="architecture">
+            <h2 class="section-title">Core Architecture</h2>
+            <p class="section-subtitle">
+                WorldArena's comprehensive evaluation framework encompasses both perceptual quality and functional utility
+            </p>
+            
+            <!-- Perceptual Evaluation -->
+            <div class="card">
+                <h3 class="card-title">Perceptual Evaluation</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    WorldArena measures multi-faceted video quality, comprising 16 numerical metrics across 6 key sub-dimensions,, including visual quality, motion quality, content consistency, physics adherence, 3D accuracy, and controllability:
+                </p>
+                
+                <!-- 插入图片 -->
+                <div>
+                    <img src="assets_common/photos/Perceptual evaluation.png" alt="Perceptual Evaluation Metrics" class="perceptual-image">
+                    <p class="caption">Figure 2: Six dimensions of perceptual evaluation with 16 specific metrics</p>
+                </div>
+                
+                <!-- 指标网格 -->
+                <div class="metrics-grid">
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">Visual Quality</span></h4>
+                        <ul class="metric-list">
+                            <li>Image Quality</li>
+                            <li>Aesthetic Quality</li>
+                            <li>JEPA Similarity</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">Motion Quality</span></h4>
+                        <ul class="metric-list">
+                            <li>Dynamic Degree</li>
+                            <li>Flow Score</li>
+                            <li>Motion Smoothness</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">Content Consistency</span></h4>
+                        <ul class="metric-list">
+                            <li>Subject Consist.</li>
+                            <li>Background Consist.</li>
+                            <li>Photometric Consist.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">Physics Adhere.</span></h4>
+                        <ul class="metric-list">
+                            <li>Interaction Quality</li>
+                            <li>Trajectory Acc.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">3D Acc.</span></h4>
+                        <ul class="metric-list">
+                            <li>Depth Acc.</li>
+                            <li>Perspectivity</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="metric-category">
+                        <h4><span class="worldarena-badge">Controllability</span></h4>
+                        <ul class="metric-list">
+                            <li>Instruction Following</li>
+                            <li>Semantic Alignment</li>
+                            <li>Action Following</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 修正后的EWMScore公式 -->
+                <div class="formula-box">
+                    EWMScore = Mean(Image Quality , Aesthetic Quality , JEPA Similarity , Dynamic Degree , Flow Score , Motion Smoothness , Subject Consist. , Background Consist. , Photometric Consist. , Interaction Quality , Trajectory Acc. , Depth Acc. , Perspectivity , Instruction Following , Semantic Alignment , Action Following)<br>
+                    <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all basic-metrics</small>
+                </div>
+            </div>
+            
+            <!-- Embodied Task Functionality -->
+            <div class="card">
+                <h3 class="card-title">Embodied Task Functionality</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    WorldArena evaluates model performance in three core areas: data synthesis, policy evaluation, and action planning.
+                </p>
+                
+                <!-- 架构图 -->
+                <div>
+                    <img src="assets_common/photos/Embodied_evaluation.png" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
+                    <p class="caption">Figure 3: Embodied Task Functionality Evaluation Framework</p>
+                </div>
+                
+                <!-- 三个功能区域的详细解释 -->
+                <div class="highlight-box">
+                    <h4>Embodied Data Engine</h4>
+                    <p style="line-height: 1.7;">
+                        We evaluate five representative embodied world models as data synthesis engines by measuring their impact on downstream policy learning. The evaluation is conducted on two manipulation tasks: <em>adjust bottle</em> (Task 1) and <em>click bell</em> (Task 2), each executed 100 times, with the success rate averaged. For each task, we train a π₀.₅ policy using 25 synthetic trajectories generated by each world model. Results show that synthetic data from most world models provides some performance gains across both tasks but still lags behind real data, indicating that current embodied world models are not yet reliable data sources for downstream learning.
+                    </p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Embodied Policy Evaluator</h4>
+                    <p style="line-height: 1.7;">
+                        We investigate whether world models can serve as proxy simulation environments for policy evaluation. To this end, we train five policy models π₀.₅ with varying performance levels. Each policy is then evaluated by interacting with an action-controllable world model, which generates observation rollouts conditioned on the policy's actions. Results show that CtrlWorld exhibits a strong correlation with the evaluation results from the RoboTwin simulator, indicating that it effectively captures meaningful environment transition dynamics. In contrast, Cosmos-Predict 2.5 shows a weaker correlation, suggesting that it struggles to accurately model the environment dynamics.
+                    </p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Embodied Action Planner</h4>
+                    <p style="line-height: 1.7;">
+                        Similar to the data engine task setting, we evaluate five representative embodied world models as end-to-end action planners by executing their predicted action sequences in the RoboTwin simulator. While several world models achieve non-trivial success rates across tasks, their overall performance remains substantially lower than that of VLA policies such as π₀.₅. These results indicate that, although current embodied world models capture useful predictive structure, they still struggle to reliably support closed-loop task execution, particularly over long horizons.
+                    </p>
+                </div>
+            </div>
+            
+        </section>
+
+        <section id="leaderboard">
+            <h2 class="section-title">Leaderboard</h2>
+            <div class="card">
+                <div style="width:100%; overflow:hidden; border-radius: 12px;">
+                    <iframe src="https://worldarena-worldarena.hf.space" style="width:100%; height:720px; border:0;" loading="lazy"></iframe>
                 </div>
             </div>
         </section>
 
-        <main>
-            <!-- Overview 部分 -->
-            <section id="overview">
-                <h2 class="section-title">Overview</h2>
-                <p class="section-subtitle">
-                    WorldArena is a unified benchmark designed to systematically evaluate embodied world models across both perceptual and functional dimensions.
-                </p>
-                
-                <div class="card">
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        WorldArena assesses models through three dimensions: <strong style="color: #2563eb;">video perception quality</strong>, measured with sixteen metrics across six sub-dimensions; <strong style="color: #2563eb;">embodied task functionality</strong>, which evaluates world models as synthetic data engines, policy evaluators, and action planners integrating with subjective human evaluation. Furthermore, we propose <strong style="color: #2563eb;">EWMScore</strong>, a holistic metric integrating multi-dimensional performance into a single interpretable index. This work provides a framework for tracking progress toward truly functional world models in embodied AI.
-                    </p>
-                </div>
-            </section>
+        <section id="examples">
+            <h2 class="section-title">Visualization Arena</h2>
+            <div class="card">
+                <div class="dim-tabs" id="dim-tabs-container"></div>
 
-            <!-- Comparison with existing benchmarks -->
-            <section id="comparison">
-                <h2 class="section-title">Comparison with Existing Benchmarks</h2>
-                <p class="section-subtitle">
-                    Comprehensive comparison of WorldArena with other world model evaluation frameworks
-                </p>
-                
-                <!-- 图片部分 - 替换原来的表格 -->
-                <div class="card">
-                    <div style="text-align: center;">
-                        <img src="assets_common/photos/benchmark_comparison.png" alt="Benchmark Comparison" class="perceptual-image">
-                        <p class="caption">Figure 1: Comprehensive comparison of WorldArena with existing world model benchmarks</p>
-                    </div>
-                </div>
-            </section>
+                <div class="sub-tabs" id="sub-tabs-container"></div>
 
-            <!-- Core Architecture 部分 -->
-            <section id="architecture">
-                <h2 class="section-title">Core Architecture</h2>
-                <p class="section-subtitle">
-                    WorldArena's comprehensive evaluation framework encompasses both perceptual quality and functional utility
-                </p>
-                
-                <!-- Perceptual Evaluation -->
-                <div class="card">
-                    <h3 class="card-title">Perceptual Evaluation</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        WorldArena measures multi-faceted video quality, comprising 16 numerical metrics across 6 key sub-dimensions:
-                    </p>
-                    
-                    <!-- 插入图片 -->
-                    <div>
-                        <img src="assets_common/photos/Perceptual evaluation.png" alt="Perceptual Evaluation Metrics" class="perceptual-image">
-                        <p class="caption">Figure 2: Six dimensions of perceptual evaluation with 16 specific metrics</p>
-                    </div>
-                    
-                    <!-- 指标网格 -->
-                    <div class="metrics-grid">
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">Visual Quality</span></h4>
-                            <ul class="metric-list">
-                                <li>Image Quality</li>
-                                <li>Aesthetic Quality</li>
-                                <li>JEPA Similarity</li>
-                            </ul>
+                <div class="scene-control-bar">
+                    <div class="scene-group" id="scene-group-container">
                         </div>
-                        
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">Motion Quality</span></h4>
-                            <ul class="metric-list">
-                                <li>Dynamic Degree</li>
-                                <li>Flow Score</li>
-                                <li>Motion Smoothness</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">Content Consistency</span></h4>
-                            <ul class="metric-list">
-                                <li>Subject Consist.</li>
-                                <li>Background Consist.</li>
-                                <li>Photometric Consist.</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">Physics Adhere.</span></h4>
-                            <ul class="metric-list">
-                                <li>Interaction Quality</li>
-                                <li>Trajectory Acc.</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">3D Acc.</span></h4>
-                            <ul class="metric-list">
-                                <li>Depth Acc.</li>
-                                <li>Perspectivity</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="metric-category">
-                            <h4><span class="worldarena-badge">Controllability</span></h4>
-                            <ul class="metric-list">
-                                <li>Instruction Following</li>
-                                <li>Semantic Alignment</li>
-                                <li>Action Following</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- 修正后的EWMScore公式 -->
-                    <div class="formula-box">
-                        EWMScore = Mean(Image Quality , Aesthetic Quality , JEPA Similarity , Dynamic Degree , Flow Score , Motion Smoothness , Subject Consist. , Background Consist. , Photometric Consist. , Interaction Quality , Trajectory Acc. , Depth Acc. , Perspectivity , Instruction Following , Semantic Alignment , Action Following)<br>
-                        <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all basic-metrics</small>
+                    <div class="instruction-text">
+                        <i class="fas fa-arrows-alt-h"></i>
+                        <span>Drag the vertical handle left or right to compare Good vs Bad cases. Click thumbnails to switch videos.</span>
                     </div>
                 </div>
-                
-                <!-- Embodied Task Functionality -->
-                <div class="card">
-                    <h3 class="card-title">Embodied Task Functionality</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        WorldArena evaluates model performance in three core areas: data synthesis, policy evaluation, and action planning.
-                    </p>
-                    
-                    <!-- 架构图 -->
-                    <div>
-                        <img src="assets_common/photos/Embodied_evaluation.png" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
-                        <p class="caption">Figure 3: Embodied Task Functionality Evaluation Framework</p>
-                    </div>
-                    
-                    <!-- 三个功能区域的详细解释 -->
-                    <div class="highlight-box">
-                        <h4>Embodied Data Engine</h4>
-                        <p style="line-height: 1.7;">
-                            We evaluate five representative embodied world models as data synthesis engines by measuring their impact on downstream policy learning. The evaluation is conducted on two manipulation tasks: <em>adjust bottle</em> (Task 1) and <em>click bell</em> (Task 2), each executed 100 times, with the success rate averaged. For each task, we train a π₀.₅ policy using 25 synthetic trajectories generated by each world model. Results show that synthetic data from most world models provides some performance gains across both tasks but still lags behind real data, indicating that current embodied world models are not yet reliable data sources for downstream learning.
-                        </p>
-                    </div>
-                    
-                    <div class="highlight-box">
-                        <h4>Embodied Policy Evaluator</h4>
-                        <p style="line-height: 1.7;">
-                            We investigate whether world models can serve as proxy simulation environments for policy evaluation. To this end, we train five policy models π₀.₅ with varying performance levels. Each policy is then evaluated by interacting with an action-controllable world model, which generates observation rollouts conditioned on the policy's actions. Results show that CtrlWorld exhibits a strong correlation with the evaluation results from the RoboTwin simulator, indicating that it effectively captures meaningful environment transition dynamics. In contrast, Cosmos-Predict 2.5 shows a weaker correlation, suggesting that it struggles to accurately model the environment dynamics.
-                        </p>
-                    </div>
-                    
-                    <div class="highlight-box">
-                        <h4>Embodied Action Planner</h4>
-                        <p style="line-height: 1.7;">
-                            Similar to the data engine task setting, we evaluate five representative embodied world models as end-to-end action planners by executing their predicted action sequences in the RoboTwin simulator. While several world models achieve non-trivial success rates across tasks, their overall performance remains substantially lower than that of VLA policies such as π₀.₅. These results indicate that, although current embodied world models capture useful predictive structure, they still struggle to reliably support closed-loop task execution, particularly over long horizons.
-                        </p>
-                    </div>
-                </div>
-                
-            </section>
 
-            <!-- Leaderboard 部分 -->
-            <section id="leaderboard">
-                <h2 class="section-title">Leaderboard</h2>
-                <p class="section-subtitle">
-                    Real-time performance ranking of world models on the WorldArena benchmark
-                </p>
-                
-                <div class="card">
-                    <div style="width:100%; max-width:100%; margin:0 auto; overflow:hidden; border-radius: 12px;">
-                        <iframe
-                            src="https://worldarena-worldarena.hf.space"
-                            style="width:100%; height:720px; border:0; border-radius: 12px;"
-                            loading="lazy">
-                        </iframe>
-                    </div>
-                    
-                    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
-                        <h4 style="color: #2563eb; margin-bottom: 1rem;">
-                            <i class="fas fa-bullhorn"></i> Call for Participation
-                        </h4>
-                        <p style="line-height: 1.7;">
-                            We invite researchers and practitioners to submit their models for evaluation on the leaderboard, enabling consistent comparison and supporting progress in world model research.
-                            For more details, kindly refer to our <a href="https://github.com/worldarena/WorldArena" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">Evaluation Toolkit</a>.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Visualization Arena 部分 -->
-            <section id="examples">
-                <h2 class="section-title">Visualization Arena</h2>
-                <p class="section-subtitle">
-                    16 dimensions × 5 scenes per dimension × Good/Bad case comparison
-                </p>
-                
-                <!-- 维度选择器 -->
-                <div class="dimension-selector" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; justify-content: center;">
-                    <button class="dimension-btn active">Visual Quality</button>
-                    <button class="dimension-btn">Motion Quality</button>
-                    <button class="dimension-btn">Content Consistency</button>
-                    <button class="dimension-btn">Physics Adherence</button>
-                    <button class="dimension-btn">3D Accuracy</button>
-                    <button class="dimension-btn">Controllability</button>
-                </div>
-                
-                <!-- 维度1: Visual Quality -->
-                <div class="card" style="padding: 2rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); margin-bottom: 3rem;">
-                    
-                    <!-- 维度标题 - 模仿原来的 wb-kicker 样式 -->
-                    <div class="wb-kicker" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                        <span style="font-size: 1.6rem; color: #2563eb;">🎨</span>
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 0;">
-                            Dimension: Visual Quality
-                        </h3>
-                    </div>
-                    
-                    <!-- 水平分隔线 - 模仿原来的 wb-hr -->
-                    <div class="wb-hr" style="height: 2px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin: 1rem 0 2rem 0;"></div>
-                    
-                    <!-- 视频对比区域 -->
-                    <section class="videogen videogen-compare" tabindex="0">
-                        <div class="video-hero">
-                            <div class="video-compare-split" data-compare>
-                                
-                                <!-- Left: Good Case -->
-                                <div class="video-wrapper gt-layer">
-                                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
-                                        <source src="assets/worldarena/videos/generation/subject_fidelity/0/good/video.mp4" type="video/mp4" />
-                                    </video>
-                                    <div class="video-label label-left">Good Case</div>
-                                </div>
-
-                                <!-- Right: Bad Case -->
-                                <div class="video-wrapper gen-layer">
-                                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
-                                        <source src="assets/worldarena/videos/generation/subject_fidelity/0/bad/video.mp4" type="video/mp4" />
-                                    </video>
-                                    <div class="video-label label-right" data-role="method-label">Bad Case</div>
-                                </div>
-
-                                <!-- Split handle -->
-                                <div class="split-handle" data-role="split-handle"
-                                    role="separator" aria-label="Drag to compare" aria-orientation="vertical">
-                                    <div class="handle-line"></div>
-                                    <div class="handle-arrows">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                        </svg>
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </div>
-                                </div>
+                <div id="visualizer-area">
+                    <div class="video-compare-wrapper" id="primary-compare">
+                        <div class="slider-container" id="slider-container-1">
+                            <div class="video-layer layer-left" id="layer-left-1">
+                                <video id="vid-good-1" loop muted autoplay playsinline></video>
+                                <div class="video-label label-left">Good Case</div>
+                            </div>
+                            <div class="video-layer layer-right" id="layer-right-1">
+                                <video id="vid-bad-1" loop muted autoplay playsinline></video>
+                                <div class="video-label label-right">Bad Case</div>
+                            </div>
+                            <div class="slider-handle" id="handle-1" style="left: 50%;">
+                                <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 场景缩略图 -->
-                        <div class="thumb-bar" role="tablist">
-                            <button class="thumb is-active"
-                                    role="tab" aria-selected="true"
-                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/0/good/video.mp4"
-                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/0/bad/video.mp4"
-                                    data-label="Bad Case">
-                                <img src="assets/worldarena/videos/generation/subject_fidelity/0/good/00000.jpg" 
-                                    loading="lazy" />
-                                <span>Scene 1</span>
-                            </button>
-
-                            <button class="thumb"
-                                    role="tab" aria-selected="false"
-                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/1/good/video.mp4"
-                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/1/bad/video.mp4"
-                                    data-label="Bad Case">
-                                <img src="assets/worldarena/videos/generation/subject_fidelity/1/good/00000.jpg" 
-                                    loading="lazy" />
-                                <span>Scene 2</span>
-                            </button>
-
-                            <button class="thumb"
-                                    role="tab" aria-selected="false"
-                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/2/good/video.mp4"
-                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/2/bad/video.mp4"
-                                    data-label="Bad Case">
-                                <img src="assets/worldarena/videos/generation/subject_fidelity/2/good/00000.jpg" 
-                                    loading="lazy" />
-                                <span>Scene 3</span>
-                            </button>
-                            
-                            <button class="thumb"
-                                    role="tab" aria-selected="false"
-                                    data-gt-src="assets/worldarena/videos/generation/temporal_consistency/0/good/video.mp4"
-                                    data-gen-src="assets/worldarena/videos/generation/temporal_consistency/0/bad/video.mp4"
-                                    data-label="Bad Case">
-                                <img src="assets/worldarena/videos/generation/temporal_consistency/0/good/00000.jpg" 
-                                    loading="lazy" />
-                                <span>Scene 4</span>
-                            </button>
-                            
-                            <button class="thumb"
-                                    role="tab" aria-selected="false"
-                                    data-gt-src="assets/worldarena/videos/generation/temporal_consistency/1/good/video.mp4"
-                                    data-gen-src="assets/worldarena/videos/generation/temporal_consistency/1/bad/video.mp4"
-                                    data-label="Bad Case">
-                                <img src="assets/worldarena/videos/generation/temporal_consistency/1/good/00000.jpg" 
-                                    loading="lazy" />
-                                <span>Scene 5</span>
-                            </button>
+                    <div class="extra-video-container" id="gt-container" style="display: none;">
+                        <span class="extra-label">Ground Truth (GT)</span>
+                        <div class="gt-video-box">
+                            <video id="vid-gt" loop muted autoplay playsinline></video>
                         </div>
-                        
-                        <!-- 说明文字 - 放在缩略图下方，卡片内部 -->
-                        <div class="instruction-box" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem; text-align: center; border-left: 3px solid #2563eb;">
-                            <p style="margin: 0; color: #64748b; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                <span style="color: #2563eb; font-size: 1.1rem;">💡</span>
-                                Drag the vertical handle left or right to compare Good vs Bad cases. Click on scene thumbnails to switch videos.
-                            </p>
-                        </div>
-                        
-                        <br><br>
-                    </section>
-                </div>
-                
-                <!-- 维度2: Motion Quality (你可以根据需要添加更多维度) -->
-                <div class="card" style="padding: 2rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);">
-                    
-                    <div class="wb-kicker" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                        <span style="font-size: 1.6rem; color: #2563eb;">⚡</span>
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 0;">
-                            Dimension: Motion Quality
-                        </h3>
                     </div>
-                    
-                    <div class="wb-hr" style="height: 2px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin: 1rem 0 2rem 0;"></div>
-                    
-                    <!-- 这里可以放置第二个维度的视频对比 -->
-                    <p style="text-align: center; color: #64748b; font-style: italic; padding: 2rem;">
-                        Video comparison for Motion Quality will be added soon...
-                    </p>
-                    
-                    <!-- 说明文字 - 也放在第二个维度的卡片内 -->
-                    <div class="instruction-box" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem; text-align: center; border-left: 3px solid #2563eb;">
-                        <p style="margin: 0; color: #64748b; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <span style="color: #2563eb; font-size: 1.1rem;">💡</span>
-                            Drag the vertical handle left or right to compare Good vs Bad cases. Click on scene thumbnails to switch videos.
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- 移除了原来的外部说明文字 -->
-            </section>
 
-   
-        </main>
-        
-        <!-- 页脚 -->
-        <section class="footer">
-            <div class="footer-content">
-                <h2 style="margin-bottom: 2rem;"></h2>
-                
-                <!-- <div class="citation-box">
-@article{worldarena2025,
-  title={WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models},
-  author={WorldArena Team},
-  journal={arXiv preprint},
-  year={2025},
-  url={https://github.com/worldarena/WorldArena}
-}
-                </div> -->
-                
-                <!-- <div style="margin-top: 3rem;">
-                    <h3>Contact</h3>
-                    <p>For questions and suggestions, please contact: 
-                        <a href="mailto:worldarena.team@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                            worldarena.team@gmail.com
-                        </a>
-                    </p> -->
-                    
-                    <div style="margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center;">
-                        
-                        <a href="https://github.com/worldarena" style="color: white; text-decoration: none;">
-                            <i class="fab fa-github fa-2x"></i>
-                            
-                        </a>
-                        <!-- <a href="https://arxiv.org" style="color: white; text-decoration: none;">
-                            <i class="ai ai-arxiv fa-2x"></i>
-                        </a> -->
-                        <a href="https://huggingface.co/spaces/WorldArena" style="color: white; text-decoration: none;">
-                            <i class="fas fa-trophy fa-2x"></i>
-                        </a>
+                    <div class="video-compare-wrapper" id="secondary-compare" style="display: none; margin-top: 20px;">
+                        <span class="extra-label" style="text-align:center; display:block; margin-bottom:5px;">Action Following: View 2</span>
+                        <div class="slider-container" id="slider-container-2">
+                            <div class="video-layer layer-left" id="layer-left-2">
+                                <video id="vid-good-2" loop muted autoplay playsinline></video>
+                                <div class="video-label label-left">Good Case (View 2)</div>
+                            </div>
+                            <div class="video-layer layer-right" id="layer-right-2">
+                                <video id="vid-bad-2" loop muted autoplay playsinline></video>
+                                <div class="video-label label-right">Bad Case (View 2)</div>
+                            </div>
+                            <div class="slider-handle" id="handle-2" style="left: 50%;">
+                                <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <p style="margin-top: 3rem; opacity: 0.7;">
-                    This website is licensed under a 
-                    <a href="https://creativecommons.org/licenses/by-sa/4.0/" style="color: #60a5fa; text-decoration: none;">
-                        Creative Commons Attribution-ShareAlike 4.0 International License
-                    </a>
-                </p>
+
             </div>
         </section>
+    </main>
 
-        <script>
-            // 左侧目录交互功能
-            document.addEventListener('DOMContentLoaded', function() {
-                const sidebarLinks = document.querySelectorAll('.fixed-sidebar nav a');
-                const sections = Array.from(sidebarLinks).map(link => {
-                    const href = link.getAttribute('href');
-                    return href ? document.querySelector(href) : null;
-                }).filter(section => section !== null);
-                
-                // 获取滚动进度条
-                const scrollProgress = document.querySelector('.scroll-progress');
-                
-                // 更新目录激活状态
-                function updateActiveSection() {
-                    let closestSection = null;
-                    let closestDistance = Infinity;
-                    
-                    const scrollPosition = window.scrollY + 100;
-                    
-                    sections.forEach(section => {
-                        if (section) {
-                            const sectionTop = section.offsetTop;
-                            const distance = Math.abs(scrollPosition - sectionTop);
-                            
-                            if (distance < closestDistance) {
-                                closestDistance = distance;
-                                closestSection = section;
-                            }
-                        }
-                    });
-                    
-                    // 更新目录激活状态
-                    sidebarLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (closestSection && link.getAttribute('href') === `#${closestSection.id}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                    
-                    // 更新滚动进度条
-                    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    const scrolled = (window.scrollY / scrollHeight) * 100;
-                    scrollProgress.style.transform = `scaleX(${scrolled / 100})`;
-                }
-                
-                // 添加平滑滚动
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const targetId = this.getAttribute('href');
-                        if (targetId.startsWith('#')) {
-                            const targetSection = document.querySelector(targetId);
-                            if (targetSection) {
-                                window.scrollTo({
-                                    top: targetSection.offsetTop - 100,
-                                    behavior: 'smooth'
-                                });
-                                
-                                sidebarLinks.forEach(l => l.classList.remove('active'));
-                                this.classList.add('active');
-                            }
-                        }
-                    });
-                });
-                
-                // 监听滚动事件
-                let isScrolling;
-                window.addEventListener('scroll', function() {
-                    window.clearTimeout(isScrolling);
-                    isScrolling = setTimeout(function() {
-                        updateActiveSection();
-                    }, 50);
-                }, false);
-                
-                // 初始更新
-                updateActiveSection();
+    <div class="footer">
+        <div style="margin-bottom: 20px;">
+            <a href="https://github.com/worldarena" target="_blank" style="margin: 0 15px; color: white;"><i class="fab fa-github fa-2x"></i></a>
+            <a href="https://huggingface.co/spaces/WorldArena" target="_blank" style="margin: 0 15px; color: white;"><i class="fas fa-trophy fa-2x"></i></a>
+        </div>
+        <p style="opacity: 0.7; font-size: 0.9rem;">
+            Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" style="color: #60a5fa;">CC BY-SA 4.0</a>
+        </p>
+    </div>
+
+    <script>
+        // ===============================================
+        // 1. DATA CONFIGURATION (Strictly matching tree)
+        // ===============================================
+        
+        const BASE_PATH = './assets/worldarena/videos';
+
+        // 数据结构：Dimension -> Folder Name -> Subtasks -> (Special Flags)
+        const DATA = {
+            "Visual Quality": {
+                folder: "Visual_Quality",
+                subtasks: [
+                    { name: "Image Quality", path: "image_quality" },
+                    { name: "Aesthetic Quality", path: "aesthetic_quality" },
+                    { name: "JEPA Similarity", path: "JEPA_similarity", hasGT: true }
+                ]
+            },
+            "Motion Quality": {
+                folder: "Motion_Quality",
+                subtasks: [
+                    { name: "Dynamic Degree", path: "dynamic_degree" },
+                    { name: "Flow Score", path: "flow_score" },
+                    { name: "Motion Smoothness", path: "motion_smoothness" }
+                ]
+            },
+            "Content Consistency": {
+                folder: "Content_Consistency",
+                subtasks: [
+                    { name: "Subject Consist.", path: "subject_consistency" },
+                    { name: "Background Consist.", path: "background_consistency" },
+                    { name: "Photometric Consist.", path: "photometric_consistency" }
+                ]
+            },
+            "Physics Adhere.": {
+                folder: "physics_adherence",
+                subtasks: [
+                    { name: "Interaction Quality", path: "Interaction_qulity" }, // Keep typo as per tree
+                    { name: "Trajectory Acc.", path: "trajectory_consistency", hasGT: true }
+                ]
+            },
+            "3D Acc.": {
+                folder: "3D_Accuracy",
+                subtasks: [
+                    { name: "Depth Acc.", path: "Depth_Accuracy", hasGT: true },
+                    { name: "Perspectivity", path: "Perspectivity" }
+                ]
+            },
+            "Controllability": {
+                folder: "Controllability",
+                subtasks: [
+                    { name: "Instruction Following", path: "Instruction_Following" },
+                    { name: "Semantic Alignment", path: "Semnatic_Alignment" }, // Keep typo as per tree
+                    { name: "Action Following", path: "Action_Following", hasVideo2: true }
+                ]
+            }
+        };
+
+        // State
+        let curDim = "Visual Quality";
+        let curSub = DATA["Visual Quality"].subtasks[0];
+        let curScene = 0; // 0, 1, 2
+
+        // DOM Elements
+        const dimTabs = document.getElementById('dim-tabs-container');
+        const subTabs = document.getElementById('sub-tabs-container');
+        const sceneGroup = document.getElementById('scene-group-container');
+
+        const vidGood1 = document.getElementById('vid-good-1');
+        const vidBad1 = document.getElementById('vid-bad-1');
+        
+        const gtContainer = document.getElementById('gt-container');
+        const vidGT = document.getElementById('vid-gt');
+
+        const secCompare = document.getElementById('secondary-compare');
+        const vidGood2 = document.getElementById('vid-good-2');
+        const vidBad2 = document.getElementById('vid-bad-2');
+
+        // ===============================================
+        // 2. INITIALIZATION & RENDERING
+        // ===============================================
+
+        function init() {
+            renderDimTabs();
+            updateUI();
+            setupSlider('slider-container-1', 'handle-1', 'layer-left-1', 'layer-right-1');
+            setupSlider('slider-container-2', 'handle-2', 'layer-left-2', 'layer-right-2');
+        }
+
+        function renderDimTabs() {
+            dimTabs.innerHTML = '';
+            Object.keys(DATA).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `dim-btn ${key === curDim ? 'active' : ''}`;
+                btn.textContent = key;
+                btn.onclick = () => {
+                    curDim = key;
+                    curSub = DATA[key].subtasks[0];
+                    curScene = 0;
+                    renderDimTabs(); // Re-render to update active class
+                    updateUI();
+                };
+                dimTabs.appendChild(btn);
             });
-            const dimensionBtns = document.querySelectorAll('.dimension-btn');
-            dimensionBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 移除所有按钮的active类
-                    dimensionBtns.forEach(b => b.classList.remove('active'));
-                    // 给当前点击的按钮添加active类
-                    this.classList.add('active');
-                    
-                    // 这里可以添加切换维度视频的逻辑
-                    const dimension = this.textContent;
-                    console.log(`切换到维度: ${dimension}`);
-                    // 在实际使用中，这里应该加载对应维度的视频数据
-                });
+        }
+
+        function renderSubTabs() {
+            subTabs.innerHTML = '';
+            DATA[curDim].subtasks.forEach(sub => {
+                const btn = document.createElement('button');
+                btn.className = `sub-btn ${sub.name === curSub.name ? 'active' : ''}`;
+                btn.textContent = sub.name;
+                btn.onclick = () => {
+                    curSub = sub;
+                    curScene = 0;
+                    renderSubTabs();
+                    updateUI(true); // true = keep scene 0
+                };
+                subTabs.appendChild(btn);
             });
+        }
+
+        function renderScenes() {
+            sceneGroup.innerHTML = '';
+            // Assuming 3 scenes (0, 1, 2)
+            [0, 1, 2].forEach(i => {
+                const img = document.createElement('img');
+                img.className = `scene-thumb ${i === curScene ? 'active' : ''}`;
+                
+                // Construct thumbnail path: videos/[Folder]/[Sub]/[i]/good/00000.jpg (or png)
+                // Note: Tree shows jpg for most, png for some. We'll try jpg, if fail usually browser shows broken icon.
+                // Based on tree: 3d_object_tracking -> png. Others -> jpg. 
+                // Let's deduce extension based on tree knowledge or try one.
+                // Simple heuristic: 3D/Map related often png, generated jpg.
+                // For simplicity in this static code, defaulting to jpg. If strict mapping needed, add to DATA.
+                // Actually tree shows: Depth_Accuracy good/00000.jpg. Image_Quality good/00000.png.
+                // Let's check subtask path to guess extension or use a generic onerror fallback.
+                
+                const ext = (curSub.path.includes('image_quality') || curSub.path.includes('map_seg')) ? 'png' : 'jpg';
+                const thumbPath = `${BASE_PATH}/${DATA[curDim].folder}/${curSub.path}/${i}/good/00000.${ext}`;
+                
+                img.src = thumbPath;
+                img.onclick = () => {
+                    curScene = i;
+                    renderScenes();
+                    loadVideos();
+                };
+                sceneGroup.appendChild(img);
+            });
+        }
+
+        function updateUI(resetScene = false) {
+            if(resetScene) curScene = 0;
+            renderSubTabs();
+            renderScenes();
+            loadVideos();
+        }
+
+        // ===============================================
+        // 3. VIDEO LOADING LOGIC
+        // ===============================================
+
+        function loadVideos() {
+            const folder = DATA[curDim].folder;
+            const sub = curSub.path;
+            const pathBase = `${BASE_PATH}/${folder}/${sub}/${curScene}`;
+
+            // 1. Primary Comparison
+            vidGood1.src = `${pathBase}/good/video.mp4`;
+            vidBad1.src = `${pathBase}/bad/video.mp4`;
+            // Sync play
+            vidGood1.currentTime = 0; vidBad1.currentTime = 0;
+            vidGood1.play(); vidBad1.play();
+
+            // 2. GT Handling
+            if (curSub.hasGT) {
+                gtContainer.style.display = 'block';
+                vidGT.src = `${pathBase}/gt/video.mp4`;
+                vidGT.play();
+            } else {
+                gtContainer.style.display = 'none';
+                vidGT.pause();
+            }
+
+            // 3. Action Following (Video 2) Handling
+            if (curSub.hasVideo2) {
+                secCompare.style.display = 'block';
+                vidGood2.src = `${pathBase}/good/video_2.mp4`;
+                vidBad2.src = `${pathBase}/bad/video_2.mp4`;
+                vidGood2.play(); vidBad2.play();
+            } else {
+                secCompare.style.display = 'none';
+                vidGood2.pause(); vidBad2.pause();
+            }
+        }
+
+        // ===============================================
+        // 4. SLIDER INTERACTION (Clip Path)
+        // ===============================================
+
+        function setupSlider(containerId, handleId, leftLayerId, rightLayerId) {
+            const container = document.getElementById(containerId);
+            const handle = document.getElementById(handleId);
+            const layerLeft = document.getElementById(leftLayerId);
+            const layerRight = document.getElementById(rightLayerId);
+            let isDragging = false;
+
+            function update(x) {
+                const rect = container.getBoundingClientRect();
+                let pct = (x - rect.left) / rect.width * 100;
+                pct = Math.max(0, Math.min(100, pct));
+                
+                handle.style.left = `${pct}%`;
+                layerLeft.style.clipPath = `polygon(0 0, ${pct}% 0, ${pct}% 100%, 0 100%)`;
+                layerRight.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+            }
+
+            // Init center
+            update(container.getBoundingClientRect().left + container.getBoundingClientRect().width / 2);
+
+            handle.addEventListener('mousedown', () => isDragging = true);
+            window.addEventListener('mouseup', () => isDragging = false);
+            window.addEventListener('mousemove', (e) => { if(isDragging) update(e.clientX); });
             
-            // 缩略图切换功能
-            document.addEventListener('DOMContentLoaded', function() {
-                const thumbs = document.querySelectorAll('.thumb');
-                
-                thumbs.forEach(thumb => {
-                    thumb.addEventListener('click', function() {
-                        // 移除所有缩略图的active类
-                        thumbs.forEach(t => t.classList.remove('is-active'));
-                        // 给当前点击的缩略图添加active类
-                        this.classList.add('is-active');
-                        
-                        // 获取视频源
-                        const gtSrc = this.getAttribute('data-gt-src');
-                        const genSrc = this.getAttribute('data-gen-src');
-                        const label = this.getAttribute('data-label');
-                        
-                        // 更新视频
-                        const gtVideo = document.querySelector('[data-role="video-gt"]');
-                        const genVideo = document.querySelector('[data-role="video-gen"]');
-                        const labelEl = document.querySelector('[data-role="method-label"]');
-                        
-                        if (gtVideo && genVideo && labelEl) {
-                            // 暂停当前视频
-                            gtVideo.pause();
-                            genVideo.pause();
-                            
-                            // 更新视频源
-                            gtVideo.querySelector('source').src = gtSrc;
-                            genVideo.querySelector('source').src = genSrc;
-                            
-                            // 更新标签
-                            labelEl.textContent = label;
-                            
-                            // 重新加载视频
-                            gtVideo.load();
-                            genVideo.load();
-                            
-                            // 播放视频
-                            setTimeout(() => {
-                                gtVideo.play();
-                                genVideo.play();
-                            }, 100);
-                        }
-                    });
-                });
-                
-                // 视频滑块功能（简化版）
-                const splitHandle = document.querySelector('[data-role="split-handle"]');
-                const videoCompareSplit = document.querySelector('[data-compare]');
-                const gtLayer = document.querySelector('.gt-layer');
-                const genLayer = document.querySelector('.gen-layer');
-                
-                if (splitHandle && videoCompareSplit && gtLayer && genLayer) {
-                    let isDragging = false;
-                    
-                    splitHandle.addEventListener('mousedown', startDrag);
-                    splitHandle.addEventListener('touchstart', startDrag);
-                    
-                    function startDrag(e) {
-                        e.preventDefault();
-                        isDragging = true;
-                        document.addEventListener('mousemove', onDrag);
-                        document.addEventListener('touchmove', onDrag);
-                        document.addEventListener('mouseup', stopDrag);
-                        document.addEventListener('touchend', stopDrag);
-                    }
-                    
-                    function onDrag(e) {
-                        if (!isDragging) return;
-                        
-                        e.preventDefault();
-                        const rect = videoCompareSplit.getBoundingClientRect();
-                        let x = 0;
-                        
-                        if (e.type === 'mousemove') {
-                            x = e.clientX - rect.left;
-                        } else if (e.type === 'touchmove') {
-                            x = e.touches[0].clientX - rect.left;
-                        }
-                        
-                        // 限制在边界内
-                        x = Math.max(0, Math.min(x, rect.width));
-                        
-                        // 计算百分比
-                        const percent = x / rect.width * 100;
-                        
-                        // 更新分割位置
-                        gtLayer.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
-                        genLayer.style.clipPath = `polygon(${percent}% 0, 100% 0, 100% 100%, ${percent}% 100%)`;
-                        splitHandle.style.left = `${percent}%`;
-                    }
-                    
-                    function stopDrag() {
-                        isDragging = false;
-                        document.removeEventListener('mousemove', onDrag);
-                        document.removeEventListener('touchmove', onDrag);
-                        document.removeEventListener('mouseup', stopDrag);
-                        document.removeEventListener('touchend', stopDrag);
-                    }
-                }
-            });
+            handle.addEventListener('touchstart', () => isDragging = true);
+            window.addEventListener('touchend', () => isDragging = false);
+            window.addEventListener('touchmove', (e) => { if(isDragging) update(e.touches[0].clientX); });
+            
+            container.addEventListener('click', (e) => update(e.clientX));
+        }
 
-        </script>
-    </body>
+        // Start
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
 </html>
