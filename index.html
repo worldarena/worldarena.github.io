@@ -24,7 +24,7 @@
         <script src="./static/js/switch_videos.js"></script>
 
         <link rel="stylesheet" href="./static/css/style.css">
-        <link rel="stylesheet" href="./static/css/worldlens.css">
+        <link rel="stylesheet" href="./static/css/worldarena.css">
         <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
 
@@ -39,18 +39,19 @@
         <script defer src="./static/js/zoom.js"></script>
 
         <style>
-          .worldlens {
+          .worldarena {
             font-weight: bold;
           }
-          .worldlens .w  { color: #34cccc; }
-          .worldlens .o  { color: #46cbbb; }
-          .worldlens .r  { color: #5fcaa1; }
-          .worldlens .l  { color: #77c888; }
-          .worldlens .d  { color:	#9bc765; }
-          .worldlens .l2 { color: #b9c546; }
-          .worldlens .e  { color: #e3c21c; }
-          .worldlens .n  { color:	#f3c10c; }
-          .worldlens .s  { color: #ffc000; }
+          .worldarena .w  { color: #34cccc; }
+          .worldarena .o  { color: #46cbbb; }
+          .worldarena .r  { color: #5fcaa1; }
+          .worldarena .l  { color: #77c888; }
+          .worldarena .d  { color:	#9bc765; }
+          .worldarena .a { color: #b9c546; }
+          .worldarena .r  { color: #e3c21c; }
+          .worldarena .e  { color:	#f3c10c; }
+          .worldarena .n  { color: #ffc000; }
+          .worldarena .a  { color: #ff9900; }
         </style>
 
         <style>
@@ -373,6 +374,223 @@
                 box-sizing: border-box;
             }
 
+            .videogen-compare {
+                width: 100%;
+                margin: 0 auto;
+            }
+            
+            .video-hero {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                border-radius: 8px;
+                background: #000;
+            }
+            
+            .video-compare-split {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                cursor: col-resize;
+                aspect-ratio: 16 / 9;
+            }
+            
+            .video-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            .video-el {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            
+            .gt-layer {
+                clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            }
+            
+            .gen-layer {
+                clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+            }
+            
+            /* 修正视频标签样式 - 改为半透明背景，位置调整 */
+            .video-label {
+                position: absolute;
+                top: 16px;
+                padding: 6px 12px;
+                background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+                color: rgba(255, 255, 255, 0.9); /* 稍微透明的白色文字 */
+                font-size: 0.85rem;
+                border-radius: 4px;
+                pointer-events: none;
+                z-index: 10;
+                font-weight: 500;
+                backdrop-filter: blur(4px); /* 毛玻璃效果 */
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+            
+            .video-label:hover {
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+            }
+            
+            .label-left {
+                left: 16px;
+            }
+            
+            .label-right {
+                right: 16px;
+            }
+            
+            .split-handle {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 40px;
+                margin-left: -20px;
+                cursor: col-resize;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 20;
+            }
+            
+            .handle-line {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: rgba(255, 255, 255, 0.8);
+                transform: translateX(-50%);
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            }
+            
+            .handle-arrows {
+                position: relative;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                transition: all 0.2s ease;
+            }
+            
+            .handle-arrows:hover {
+                background: white;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                transform: scale(1.05);
+            }
+            
+            .handle-arrows svg {
+                color: #333;
+            }
+            
+            .thumb-bar {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1.5rem;
+                padding-bottom: 1rem;
+                overflow-x: auto;
+                justify-content: center;
+            }
+            
+            .thumb {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 8px;
+                border: 2px solid transparent;
+                border-radius: 8px;
+                background: transparent;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                min-width: 100px;
+            }
+            
+            .thumb:hover {
+                background: rgba(37, 99, 235, 0.05);
+                border-color: rgba(37, 99, 235, 0.2);
+                transform: translateY(-2px);
+            }
+            
+            .thumb.is-active {
+                border-color: #2563eb;
+                background: rgba(37, 99, 235, 0.1);
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            }
+            
+            .thumb img {
+                width: 100%;
+                height: 70px;
+                object-fit: cover;
+                border-radius: 4px;
+                border: 2px solid transparent;
+                transition: all 0.2s ease;
+            }
+            
+            .thumb:hover img {
+                border-color: rgba(37, 99, 235, 0.3);
+            }
+            
+            .thumb.is-active img {
+                border-color: #2563eb;
+            }
+            
+            .thumb span {
+                margin-top: 8px;
+                font-size: 0.85rem;
+                color: #64748b;
+                font-weight: 500;
+            }
+            
+            /* 维度选择器样式 */
+            .dimension-selector {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+                margin-bottom: 2rem;
+                justify-content: center;
+            }
+            
+            .dimension-btn {
+                padding: 8px 20px;
+                background: white;
+                border: 2px solid #e2e8f0;
+                border-radius: 25px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                color: #64748b;
+                font-size: 0.9rem;
+            }
+            
+            .dimension-btn:hover {
+                border-color: #2563eb;
+                color: #2563eb;
+                transform: translateY(-2px);
+            }
+            
+            .dimension-btn.active {
+                background: #2563eb;
+                color: white;
+                border-color: #2563eb;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            }
+
             /* 响应式设计 */
             @media (max-width: 1200px) {
                 .fixed-sidebar {
@@ -453,7 +671,28 @@
                 .footer {
                     padding: 40px 15px;
                 }
+
+                .video-label {
+                    font-size: 0.75rem;
+                    padding: 4px 8px;
+                    top: 12px;
+                }
+                
+                .dimension-btn {
+                    padding: 6px 16px;
+                    font-size: 0.85rem;
+                }
+                
+                .thumb {
+                    min-width: 80px;
+                }
+                
+                .thumb img {
+                    height: 60px;
+                }
             }
+
+
 
             /* WorldArena 徽章 */
             .worldarena-badge {
@@ -538,9 +777,9 @@
                     A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models
                 </p>
                 <div class="action-buttons">
-                    <a href="assets_common/papers/WorldArena.pdf" class="btn btn-primary" target="_blank">
+                    <!-- <a href="assets_common/papers/WorldArena.pdf" class="btn btn-primary" target="_blank">
                         <i class="ai ai-arxiv"></i> Paper PDF
-                    </a>
+                    </a> -->
                     <a href="https://github.com/worldarena/WorldArena" class="btn btn-secondary" target="_blank">
                         <i class="fab fa-github"></i> GitHub
                     </a>
@@ -659,8 +898,8 @@
                     
                     <!-- 修正后的EWMScore公式 -->
                     <div class="formula-box">
-                        EWMScore = (Image Quality + Aesthetic Quality + JEPA Similarity + Dynamic Degree + Flow Score + Motion Smoothness + Subject Consist. + Background Consist. + Photometric Consist. + Interaction Quality + Trajectory Acc. + Depth Acc. + Perspectivity + Instruction Following + Semantic Alignment + Action Following) / 16<br>
-                        <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all 16 sub-metrics</small>
+                        EWMScore = Mean(Image Quality , Aesthetic Quality , JEPA Similarity , Dynamic Degree , Flow Score , Motion Smoothness , Subject Consist. , Background Consist. , Photometric Consist. , Interaction Quality , Trajectory Acc. , Depth Acc. , Perspectivity , Instruction Following , Semantic Alignment , Action Following)<br>
+                        <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all basic-metrics</small>
                     </div>
                 </div>
                 
@@ -700,16 +939,6 @@
                     </div>
                 </div>
                 
-                <!-- EWMScore 综合指标 -->
-                <div class="card">
-                    <h3 class="card-title">EWMScore: Unified Evaluation Metric</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8;">
-                        We propose <strong style="color: #2563eb;">EWMScore</strong>, a holistic metric that integrates multi-dimensional performance into a single interpretable index. EWMScore combines perceptual quality scores with functional utility metrics, weighted by their importance for real-world deployment.
-                    </p>
-                    <div class="formula-box">
-                        EWMScore = α × PerceptionScore + β × FunctionalityScore + γ × HumanAlignmentScore
-                    </div>
-                </div>
             </section>
 
             <!-- Leaderboard 部分 -->
@@ -739,17 +968,180 @@
                     </div>
                 </div>
             </section>
+            
+            <!-- Visualization Arena 部分 -->
+            <section id="examples">
+                <h2 class="section-title">Visualization Arena</h2>
+                <p class="section-subtitle">
+                    16 dimensions × 5 scenes per dimension × Good/Bad case comparison
+                </p>
+                
+                <!-- 维度选择器 -->
+                <div class="dimension-selector" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; justify-content: center;">
+                    <button class="dimension-btn active">Visual Quality</button>
+                    <button class="dimension-btn">Motion Quality</button>
+                    <button class="dimension-btn">Content Consistency</button>
+                    <button class="dimension-btn">Physics Adherence</button>
+                    <button class="dimension-btn">3D Accuracy</button>
+                    <button class="dimension-btn">Controllability</button>
+                </div>
+                
+                <!-- 维度1: Visual Quality -->
+                <div class="card" style="padding: 2rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); margin-bottom: 3rem;">
+                    
+                    <!-- 维度标题 - 模仿原来的 wb-kicker 样式 -->
+                    <div class="wb-kicker" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                        <span style="font-size: 1.6rem; color: #2563eb;">🎨</span>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 0;">
+                            Dimension: Visual Quality
+                        </h3>
+                    </div>
+                    
+                    <!-- 水平分隔线 - 模仿原来的 wb-hr -->
+                    <div class="wb-hr" style="height: 2px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin: 1rem 0 2rem 0;"></div>
+                    
+                    <!-- 视频对比区域 -->
+                    <section class="videogen videogen-compare" tabindex="0">
+                        <div class="video-hero">
+                            <div class="video-compare-split" data-compare>
+                                
+                                <!-- Left: Good Case -->
+                                <div class="video-wrapper gt-layer">
+                                    <video class="video-el" data-role="video-gt" autoplay loop muted playsinline>
+                                        <source src="assets/worldarena/videos/generation/subject_fidelity/0/good/video.mp4" type="video/mp4" />
+                                    </video>
+                                    <div class="video-label label-left">Good Case</div>
+                                </div>
 
-            <!-- 其他部分保持原有内容 -->
-            <!-- 这里省略了其他部分，因为你说要简化 -->
+                                <!-- Right: Bad Case -->
+                                <div class="video-wrapper gen-layer">
+                                    <video class="video-el" data-role="video-gen" autoplay loop muted playsinline>
+                                        <source src="assets/worldarena/videos/generation/subject_fidelity/0/bad/video.mp4" type="video/mp4" />
+                                    </video>
+                                    <div class="video-label label-right" data-role="method-label">Bad Case</div>
+                                </div>
+
+                                <!-- Split handle -->
+                                <div class="split-handle" data-role="split-handle"
+                                    role="separator" aria-label="Drag to compare" aria-orientation="vertical">
+                                    <div class="handle-line"></div>
+                                    <div class="handle-arrows">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 场景缩略图 -->
+                        <div class="thumb-bar" role="tablist">
+                            <button class="thumb is-active"
+                                    role="tab" aria-selected="true"
+                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/0/good/video.mp4"
+                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/0/bad/video.mp4"
+                                    data-label="Bad Case">
+                                <img src="assets/worldarena/videos/generation/subject_fidelity/0/good/00000.jpg" 
+                                    loading="lazy" />
+                                <span>Scene 1</span>
+                            </button>
+
+                            <button class="thumb"
+                                    role="tab" aria-selected="false"
+                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/1/good/video.mp4"
+                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/1/bad/video.mp4"
+                                    data-label="Bad Case">
+                                <img src="assets/worldarena/videos/generation/subject_fidelity/1/good/00000.jpg" 
+                                    loading="lazy" />
+                                <span>Scene 2</span>
+                            </button>
+
+                            <button class="thumb"
+                                    role="tab" aria-selected="false"
+                                    data-gt-src="assets/worldarena/videos/generation/subject_fidelity/2/good/video.mp4"
+                                    data-gen-src="assets/worldarena/videos/generation/subject_fidelity/2/bad/video.mp4"
+                                    data-label="Bad Case">
+                                <img src="assets/worldarena/videos/generation/subject_fidelity/2/good/00000.jpg" 
+                                    loading="lazy" />
+                                <span>Scene 3</span>
+                            </button>
+                            
+                            <button class="thumb"
+                                    role="tab" aria-selected="false"
+                                    data-gt-src="assets/worldarena/videos/generation/temporal_consistency/0/good/video.mp4"
+                                    data-gen-src="assets/worldarena/videos/generation/temporal_consistency/0/bad/video.mp4"
+                                    data-label="Bad Case">
+                                <img src="assets/worldarena/videos/generation/temporal_consistency/0/good/00000.jpg" 
+                                    loading="lazy" />
+                                <span>Scene 4</span>
+                            </button>
+                            
+                            <button class="thumb"
+                                    role="tab" aria-selected="false"
+                                    data-gt-src="assets/worldarena/videos/generation/temporal_consistency/1/good/video.mp4"
+                                    data-gen-src="assets/worldarena/videos/generation/temporal_consistency/1/bad/video.mp4"
+                                    data-label="Bad Case">
+                                <img src="assets/worldarena/videos/generation/temporal_consistency/1/good/00000.jpg" 
+                                    loading="lazy" />
+                                <span>Scene 5</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 说明文字 - 放在缩略图下方，卡片内部 -->
+                        <div class="instruction-box" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem; text-align: center; border-left: 3px solid #2563eb;">
+                            <p style="margin: 0; color: #64748b; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span style="color: #2563eb; font-size: 1.1rem;">💡</span>
+                                Drag the vertical handle left or right to compare Good vs Bad cases. Click on scene thumbnails to switch videos.
+                            </p>
+                        </div>
+                        
+                        <br><br>
+                    </section>
+                </div>
+                
+                <!-- 维度2: Motion Quality (你可以根据需要添加更多维度) -->
+                <div class="card" style="padding: 2rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);">
+                    
+                    <div class="wb-kicker" style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                        <span style="font-size: 1.6rem; color: #2563eb;">⚡</span>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 0;">
+                            Dimension: Motion Quality
+                        </h3>
+                    </div>
+                    
+                    <div class="wb-hr" style="height: 2px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin: 1rem 0 2rem 0;"></div>
+                    
+                    <!-- 这里可以放置第二个维度的视频对比 -->
+                    <p style="text-align: center; color: #64748b; font-style: italic; padding: 2rem;">
+                        Video comparison for Motion Quality will be added soon...
+                    </p>
+                    
+                    <!-- 说明文字 - 也放在第二个维度的卡片内 -->
+                    <div class="instruction-box" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem; text-align: center; border-left: 3px solid #2563eb;">
+                        <p style="margin: 0; color: #64748b; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span style="color: #2563eb; font-size: 1.1rem;">💡</span>
+                            Drag the vertical handle left or right to compare Good vs Bad cases. Click on scene thumbnails to switch videos.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 移除了原来的外部说明文字 -->
+            </section>
+
+   
         </main>
         
         <!-- 页脚 -->
         <section class="footer">
             <div class="footer-content">
-                <h2 style="margin-bottom: 2rem;">Citation</h2>
+                <h2 style="margin-bottom: 2rem;"></h2>
                 
-                <div class="citation-box">
+                <!-- <div class="citation-box">
 @article{worldarena2025,
   title={WorldArena: A Unified Benchmark for Evaluating Perception and Functional Utility of Embodied World Models},
   author={WorldArena Team},
@@ -757,23 +1149,25 @@
   year={2025},
   url={https://github.com/worldarena/WorldArena}
 }
-                </div>
+                </div> -->
                 
-                <div style="margin-top: 3rem;">
+                <!-- <div style="margin-top: 3rem;">
                     <h3>Contact</h3>
                     <p>For questions and suggestions, please contact: 
                         <a href="mailto:worldarena.team@gmail.com" style="color: #60a5fa; text-decoration: none;">
                             worldarena.team@gmail.com
                         </a>
-                    </p>
+                    </p> -->
                     
                     <div style="margin-top: 2rem; display: flex; gap: 1.5rem; justify-content: center;">
+                        
                         <a href="https://github.com/worldarena" style="color: white; text-decoration: none;">
                             <i class="fab fa-github fa-2x"></i>
+                            
                         </a>
-                        <a href="https://arxiv.org" style="color: white; text-decoration: none;">
+                        <!-- <a href="https://arxiv.org" style="color: white; text-decoration: none;">
                             <i class="ai ai-arxiv fa-2x"></i>
-                        </a>
+                        </a> -->
                         <a href="https://huggingface.co/spaces/WorldArena" style="color: white; text-decoration: none;">
                             <i class="fas fa-trophy fa-2x"></i>
                         </a>
@@ -781,7 +1175,7 @@
                 </div>
                 
                 <p style="margin-top: 3rem; opacity: 0.7;">
-                    © 2025 WorldArena Team. This website is licensed under a 
+                    This website is licensed under a 
                     <a href="https://creativecommons.org/licenses/by-sa/4.0/" style="color: #60a5fa; text-decoration: none;">
                         Creative Commons Attribution-ShareAlike 4.0 International License
                     </a>
@@ -866,6 +1260,123 @@
                 // 初始更新
                 updateActiveSection();
             });
+            const dimensionBtns = document.querySelectorAll('.dimension-btn');
+            dimensionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    dimensionBtns.forEach(b => b.classList.remove('active'));
+                    // 给当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 这里可以添加切换维度视频的逻辑
+                    const dimension = this.textContent;
+                    console.log(`切换到维度: ${dimension}`);
+                    // 在实际使用中，这里应该加载对应维度的视频数据
+                });
+            });
+            
+            // 缩略图切换功能
+            document.addEventListener('DOMContentLoaded', function() {
+                const thumbs = document.querySelectorAll('.thumb');
+                
+                thumbs.forEach(thumb => {
+                    thumb.addEventListener('click', function() {
+                        // 移除所有缩略图的active类
+                        thumbs.forEach(t => t.classList.remove('is-active'));
+                        // 给当前点击的缩略图添加active类
+                        this.classList.add('is-active');
+                        
+                        // 获取视频源
+                        const gtSrc = this.getAttribute('data-gt-src');
+                        const genSrc = this.getAttribute('data-gen-src');
+                        const label = this.getAttribute('data-label');
+                        
+                        // 更新视频
+                        const gtVideo = document.querySelector('[data-role="video-gt"]');
+                        const genVideo = document.querySelector('[data-role="video-gen"]');
+                        const labelEl = document.querySelector('[data-role="method-label"]');
+                        
+                        if (gtVideo && genVideo && labelEl) {
+                            // 暂停当前视频
+                            gtVideo.pause();
+                            genVideo.pause();
+                            
+                            // 更新视频源
+                            gtVideo.querySelector('source').src = gtSrc;
+                            genVideo.querySelector('source').src = genSrc;
+                            
+                            // 更新标签
+                            labelEl.textContent = label;
+                            
+                            // 重新加载视频
+                            gtVideo.load();
+                            genVideo.load();
+                            
+                            // 播放视频
+                            setTimeout(() => {
+                                gtVideo.play();
+                                genVideo.play();
+                            }, 100);
+                        }
+                    });
+                });
+                
+                // 视频滑块功能（简化版）
+                const splitHandle = document.querySelector('[data-role="split-handle"]');
+                const videoCompareSplit = document.querySelector('[data-compare]');
+                const gtLayer = document.querySelector('.gt-layer');
+                const genLayer = document.querySelector('.gen-layer');
+                
+                if (splitHandle && videoCompareSplit && gtLayer && genLayer) {
+                    let isDragging = false;
+                    
+                    splitHandle.addEventListener('mousedown', startDrag);
+                    splitHandle.addEventListener('touchstart', startDrag);
+                    
+                    function startDrag(e) {
+                        e.preventDefault();
+                        isDragging = true;
+                        document.addEventListener('mousemove', onDrag);
+                        document.addEventListener('touchmove', onDrag);
+                        document.addEventListener('mouseup', stopDrag);
+                        document.addEventListener('touchend', stopDrag);
+                    }
+                    
+                    function onDrag(e) {
+                        if (!isDragging) return;
+                        
+                        e.preventDefault();
+                        const rect = videoCompareSplit.getBoundingClientRect();
+                        let x = 0;
+                        
+                        if (e.type === 'mousemove') {
+                            x = e.clientX - rect.left;
+                        } else if (e.type === 'touchmove') {
+                            x = e.touches[0].clientX - rect.left;
+                        }
+                        
+                        // 限制在边界内
+                        x = Math.max(0, Math.min(x, rect.width));
+                        
+                        // 计算百分比
+                        const percent = x / rect.width * 100;
+                        
+                        // 更新分割位置
+                        gtLayer.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
+                        genLayer.style.clipPath = `polygon(${percent}% 0, 100% 0, 100% 100%, ${percent}% 100%)`;
+                        splitHandle.style.left = `${percent}%`;
+                    }
+                    
+                    function stopDrag() {
+                        isDragging = false;
+                        document.removeEventListener('mousemove', onDrag);
+                        document.removeEventListener('touchmove', onDrag);
+                        document.removeEventListener('mouseup', stopDrag);
+                        document.removeEventListener('touchend', stopDrag);
+                    }
+                }
+            });
+
         </script>
     </body>
 </html>
