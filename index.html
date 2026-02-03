@@ -402,39 +402,24 @@
             display: flex; /* 关键：让左右两部分并排 */
         }
 
-        /* 左侧视频容器 */
-        .video-layer.layer-left {
-            position: relative; /* 取消之前的 absolute */
-            height: 100%;
-            width: 50%; /* 初始各占一半 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-            overflow: hidden;
-            border-right: 1px solid rgba(255,255,255,0.2);
-        }
-
-        /* 右侧视频容器 */
-        .video-layer.layer-right {
-            position: relative; /* 取消之前的 absolute */
-            height: 100%;
-            flex: 1; /* 占据剩余所有空间 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-            overflow: hidden;
-        }
-
         .video-layer {
-            /* 取消绝对定位，让它们按 flex 布局排列 */
-            position: relative !important; 
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            display: flex;
-            align-items: center; /* 垂直居中 */
+            /* Ensure flex items can shrink properly */
+            min-width: 0; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        .video-layer.layer-left {
+            /* Left side is controlled by JS width % */
+            width: 50%; 
+            border-right: 1px solid white;
+            z-index: 2; /* Keep above if needed */
+        }
+
+        .video-layer.layer-right {
+            /* Right side automatically fills remaining space */
+            flex: 1; 
+            min-width: 0;
         }
 
         .layer-left {
@@ -529,9 +514,9 @@
         <nav>
             <a href="#overview" class="active">Overview</a>
             <a href="#comparison">Benchmark Comparison</a>
-            <a href="#architecture">Core Architecture</a>
+            <a href="#architecture">Evaluation System</a>
             <a href="#leaderboard">Leaderboard</a>
-            <a href="#examples">Visualization Arena</a>
+            <a href="#examples">Visualization Examples</a>
         </nav>
     </div>
 
@@ -627,7 +612,7 @@
 
 
         <section id="architecture">
-            <h2 class="section-title">Core Architecture</h2>
+            <h2 class="section-title">Evaluation System</h2>
             <p class="section-subtitle">
                 WorldArena's comprehensive evaluation framework encompasses both perceptual quality and functional utility
             </p>
@@ -642,7 +627,9 @@
                 <!-- 插入图片 -->
                 <div>
                     <img src="assets_common/photos/Perceptual evaluation.png" alt="Perceptual Evaluation Metrics" class="perceptual-image">
-                    <p class="caption">Figure 2: Six dimensions of perceptual evaluation with 16 specific metrics</p>
+                    <p class="caption" style="color: #000; font-style: italic; text-align: center; margin-top: 10px; font-weight: 600;">
+                        Figure 1: Six dimensions of perceptual evaluation with 16 specific metrics
+                    </p>
                 </div>
                 
                 <!-- 指标网格 -->
@@ -668,24 +655,24 @@
                     <div class="metric-category">
                         <h4><span class="worldarena-badge">Content Consistency</span></h4>
                         <ul class="metric-list">
-                            <li>Subject Consist.</li>
-                            <li>Background Consist.</li>
-                            <li>Photometric Consist.</li>
+                            <li>Subject Consistency</li>
+                            <li>Background Consistency</li>
+                            <li>Photometric Consistency</li>
                         </ul>
                     </div>
                     
                     <div class="metric-category">
-                        <h4><span class="worldarena-badge">Physics Adhere.</span></h4>
+                        <h4><span class="worldarena-badge">Physics Adherence</span></h4>
                         <ul class="metric-list">
                             <li>Interaction Quality</li>
-                            <li>Trajectory Acc.</li>
+                            <li>Trajectory Accuracy</li>
                         </ul>
                     </div>
                     
                     <div class="metric-category">
-                        <h4><span class="worldarena-badge">3D Acc.</span></h4>
+                        <h4><span class="worldarena-badge">3D Accuracy</span></h4>
                         <ul class="metric-list">
-                            <li>Depth Acc.</li>
+                            <li>Depth Accuracy</li>
                             <li>Perspectivity</li>
                         </ul>
                     </div>
@@ -702,8 +689,7 @@
                 
                 <!-- 修正后的EWMScore公式 -->
                 <div class="formula-box">
-                    EWMScore = Mean(Image Quality , Aesthetic Quality , JEPA Similarity , Dynamic Degree , Flow Score , Motion Smoothness , Subject Consist. , Background Consist. , Photometric Consist. , Interaction Quality , Trajectory Acc. , Depth Acc. , Perspectivity , Instruction Following , Semantic Alignment , Action Following)<br>
-                    <small style="color: #64748b; font-size: 0.9rem;">EWMScore is calculated as the average of all basic-metrics</small>
+                    <strong>EWMScore</strong> is defined as the arithmetic mean of the 16 basic metrics listed above, with all scores normalized and linearly scaled to a range of [0, 100]. It serves as a comprehensive evaluation metric, where a higher value signifies superior overall model performance in both perception and functional utility.
                 </div>
             </div>
             
@@ -711,34 +697,43 @@
             <div class="card">
                 <h3 class="card-title">Embodied Task Functionality</h3>
                 <p style="font-size: 1.1rem; line-height: 1.8;">
-                    WorldArena evaluates model performance in three core areas: data synthesis, policy evaluation, and action planning.
+                    WorldArena evaluates model performance in three core downstream tasks: <strong>Data Engine</strong>, <strong>Policy Evaluator</strong>, and <strong>Action Planner</strong>.
+
                 </p>
                 
                 <!-- 架构图 -->
                 <div>
                     <img src="assets_common/photos/Embodied_evaluation.png" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
-                    <p class="caption">Figure 3: Embodied Task Functionality Evaluation Framework</p>
+                    <p class="caption" style="color: #000; font-style: italic; text-align: center; margin-top: 10px; font-weight: 600;">
+                        Figure 2: Embodied Task Functionality Evaluation Framework
+                    </p>
                 </div>
                 
                 <!-- 三个功能区域的详细解释 -->
                 <div class="highlight-box">
                     <h4>Embodied Data Engine</h4>
                     <p style="line-height: 1.7;">
-                        We evaluate five representative embodied world models as data synthesis engines by measuring their impact on downstream policy learning. The evaluation is conducted on two manipulation tasks: <em>adjust bottle</em> (Task 1) and <em>click bell</em> (Task 2), each executed 100 times, with the success rate averaged. For each task, we train a π₀.₅ policy using 25 synthetic trajectories generated by each world model. Results show that synthetic data from most world models provides some performance gains across both tasks but still lags behind real data, indicating that current embodied world models are not yet reliable data sources for downstream learning.
+                      World models can generate future observations based on external instructions, enabling synthetic data generation to supplement training data for downstream embodied policy models and alleviate the scarcity of real-world data. In this part, we treat world models as embodied data synthesis engines and evaluate their performance by measuring the gain they provide to policy models.
+
+                      We employ a two-phase training procedure. In the first phase, we fine-tune the world model on the RobotTwin 2.0 dataset and generate synthetic videos conditioned on the first frame and external instructions. In the second phase, we freeze the world model’s weights and integrate an inverse dynamics model (IDM) to extract actions from video features. Specifically, we follow the VPP design of the diffusion policy head, guiding an action denoising head with intermediate world model features for action prediction. This process produces paired video-action sequences.
+                      We then evaluate the impact of world model–generated synthetic data by training a baseline π₀.₅ policy model with varying amounts of synthetic data. The performance gain of the policy model reflects the world model’s capability to enhance policy learning.
+                      
                     </p>
                 </div>
                 
                 <div class="highlight-box">
                     <h4>Embodied Policy Evaluator</h4>
                     <p style="line-height: 1.7;">
-                        We investigate whether world models can serve as proxy simulation environments for policy evaluation. To this end, we train five policy models π₀.₅ with varying performance levels. Each policy is then evaluated by interacting with an action-controllable world model, which generates observation rollouts conditioned on the policy's actions. Results show that CtrlWorld exhibits a strong correlation with the evaluation results from the RoboTwin simulator, indicating that it effectively captures meaningful environment transition dynamics. In contrast, Cosmos-Predict 2.5 shows a weaker correlation, suggesting that it struggles to accurately model the environment dynamics.
+                        We assess the capability of world models as environment proxies for evaluating policy performance. We train a series of policy models π₀.₅ with varying capabilities using the RoboTwin 2.0 dataset. These models are evaluated by interacting with an action-controllable world model, generating observation videos through a rollout process that continues until it exceeds 20\% more frames than the corresponding ground truth video. Task success is evaluated using a VLM, which determines whether the embodied task was executed successfully. 
+
+                        The success rate from the world model's evaluation is compared to that from the RoboTwin simulator. A high correlation between the two suggests effective simulation of real-world dynamics, while a low correlation indicates a mismatch in environmental transition simulation.
                     </p>
                 </div>
                 
                 <div class="highlight-box">
                     <h4>Embodied Action Planner</h4>
                     <p style="line-height: 1.7;">
-                        Similar to the data engine task setting, we evaluate five representative embodied world models as end-to-end action planners by executing their predicted action sequences in the RoboTwin simulator. While several world models achieve non-trivial success rates across tasks, their overall performance remains substantially lower than that of VLA policies such as π₀.₅. These results indicate that, although current embodied world models capture useful predictive structure, they still struggle to reliably support closed-loop task execution, particularly over long horizons.
+                        By predicting future state transitions, world models can function as the action-planning "brain" of an embodied agent. In this part, we investigate the ability of world models to execute embodied tasks in a closed-loop manner. Similar to the data synthesis engine setup, we pair the world model with an inverse dynamics model, where the world model takes textual instructions and the initial frame as input and outputs the corresponding action sequence for future operations. This sequence is then executed in the RoboTwin simulator, and the task success rate is measured to evaluate the world model's performance in closed-loop action execution.
                     </p>
                 </div>
             </div>
@@ -755,7 +750,7 @@
         </section>
 
         <section id="examples">
-            <h2 class="section-title">Visualization Arena</h2>
+            <h2 class="section-title">Visualization Examples</h2>
             <div class="card">
                 <div class="dim-tabs" id="dim-tabs-container"></div>
                 <div class="sub-tabs" id="sub-tabs-container"></div>
@@ -767,7 +762,7 @@
                 <div id="visualizer-area" style="min-height: 800px;">
                     <div class="video-compare-wrapper" id="primary-compare">
                         <div class="slider-container" id="slider-container-1">
-                            <div class="video-layer layer-left">
+                            <div class="video-layer layer-left" id="layer-left-1">
                                 <video id="vid-top-left" loop muted autoplay playsinline></video>
                                 <div class="video-label label-left" id="label-tl" style="display: block !important;">Good Case 1</div>
                             </div>
@@ -775,11 +770,47 @@
                                 <video id="vid-top-right" loop muted autoplay playsinline></video>
                                 <div class="video-label label-right" id="label-tr" style="display: block !important;">Good Case 2</div>
                             </div>
-                            <div class="slider-handle" id="handle-1">
+                            <div class="slider-handle" id="handle-1" style="left: 50%;">
                                 <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
                             </div>
                         </div>
                     </div>
+
+                    <div id="instruction-display" style="display: none; margin: 20px 0; padding: 15px; background: #fff; border-radius: 12px; border: 1px solid #ddd;">
+                        <div style="display: flex; gap: 20px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.7rem; font-weight: 800; color: #888; text-transform: uppercase;">Case 1 Instruction</span>
+                                <p id="text-good-content" style="font-size: 0.95rem; color: #333; margin: 5px 0 0 0; padding-left: 10px; border-left: 3px solid #007bff;"></p>
+                            </div>
+                            <div style="width: 1px; background: #eee;"></div>
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.7rem; font-weight: 800; color: #888; text-transform: uppercase;">Case 2 Instruction</span>
+                                <p id="text-bad-content" style="font-size: 0.95rem; color: #333; margin: 5px 0 0 0; padding-left: 10px; border-left: 3px solid #dc3545;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-compare-wrapper" id="secondary-compare" style="display: none;">
+                        <div class="slider-container" id="slider-container-2">
+                            <div class="video-layer layer-left" id="layer-left-2">
+                                <video id="vid-bottom-left" loop muted autoplay playsinline></video>
+                                <div class="video-label label-left" id="label-bl" style="display: block !important;">Bad Case 1</div>
+                            </div>
+                            <div class="video-layer layer-right">
+                                <video id="vid-bottom-right" loop muted autoplay playsinline></video>
+                                <div class="video-label label-right" id="label-br" style="display: block !important;">Bad Case 2</div>
+                            </div>
+                            <div class="slider-handle" id="handle-2" style="left: 50%;">
+                                <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="extra-video-container" id="gt-container" style="display: none; margin-top: 20px;">
+                        <span class="extra-label">Ground Truth</span>
+                        <div class="gt-video-box"><video id="vid-gt" loop muted autoplay playsinline></video></div>
+                    </div>
+                </div>
 
                     <div id="instruction-display" style="display: none; margin: 20px 0; padding: 15px; background: #fff; border-radius: 12px; border: 1px solid #ddd;">
                         <div style="display: flex; gap: 20px;">
@@ -1102,43 +1133,59 @@
         // 4. SLIDER INTERACTION (Clip Path)
         // ===============================================
 
-        function setupSlider(containerId, handleId, leftLayerId, rightLayerId) {
+        function setupSlider(containerId, handleId, leftLayerId) {
             const container = document.getElementById(containerId);
             const handle = document.getElementById(handleId);
-            const layerLeft = document.getElementById(leftLayerId);
-            // 右侧层因为用了 flex: 1，会自动填满剩余空间，不需要手动改宽度
-            
+            const leftLayer = document.getElementById(leftLayerId);
+
+            // Safety check: if elements don't exist, stop (prevents console errors)
+            if (!container || !handle || !leftLayer) return;
+
             let isDragging = false;
 
-            function update(x) {
+            // Function to update widths based on mouse X position
+            function updateSlider(clientX) {
                 const rect = container.getBoundingClientRect();
-                let pct = ((x - rect.left) / rect.width) * 100;
-                pct = Math.max(0, Math.min(100, pct)); 
+                let x = clientX - rect.left;
+                
+                // Calculate percentage (0 to 100)
+                let percent = (x / rect.width) * 100;
+                
+                // Clamp between 5% and 95% so it doesn't disappear completely
+                percent = Math.max(5, Math.min(95, percent));
 
-                handle.style.left = `${pct}%`;
-                
-                // 只需改变左边宽度，右边 flex: 1 会自动响应
-                layerLeft.style.width = `${pct}%`;
-                
-                // 如果你发现右边视频还是不出来，强制刷新一下右边宽度（可选）
-                // layerRight.style.width = `${100 - pct}%`; 
+                // Apply styles
+                handle.style.left = `${percent}%`;
+                leftLayer.style.width = `${percent}%`;
             }
 
-            // 初始化
-            setTimeout(() => {
-                const rect = container.getBoundingClientRect();
-                update(rect.left + rect.width / 2);
-            }, 100);
+            // --- Mouse Events ---
+            handle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                e.preventDefault(); // Prevent text selection
+            });
 
-            // 事件监听保持不变
-            handle.addEventListener('mousedown', () => isDragging = true);
-            window.addEventListener('mouseup', () => isDragging = false);
-            window.addEventListener('mousemove', (e) => { if(isDragging) update(e.clientX); });
-            
-            handle.addEventListener('touchstart', () => isDragging = true);
-            window.addEventListener('touchend', () => isDragging = false);
-            window.addEventListener('touchmove', (e) => { 
-                if(isDragging) update(e.touches[0].clientX); 
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                updateSlider(e.clientX);
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // --- Touch Events (Mobile) ---
+            handle.addEventListener('touchstart', (e) => {
+                isDragging = true;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                updateSlider(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                isDragging = false;
             });
         }
 
