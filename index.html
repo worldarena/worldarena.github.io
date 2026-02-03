@@ -486,6 +486,9 @@
         }
         .label-left { left: 8px; }
         .label-right { right: 8px; }
+        #secondary-compare .video-label {
+            display: block !important;
+        }
 
         /* Handle */
         .slider-handle {
@@ -755,68 +758,91 @@
             <h2 class="section-title">Visualization Arena</h2>
             <div class="card">
                 <div class="dim-tabs" id="dim-tabs-container"></div>
-
                 <div class="sub-tabs" id="sub-tabs-container"></div>
 
-                <!-- <div class="scene-control-bar">
-                    <div class="scene-group" id="scene-group-container">
-                        </div>
-                    <div class="instruction-text">
-                        <i class="fas fa-arrows-alt-h"></i>
-                        <span>Drag the vertical handle left or right to compare Good vs Bad cases. Click thumbnails to switch videos.</span>
-                    </div>
-                </div> -->
                 <div class="scene-selection-area">
-                    <div class="scene-group" id="scene-group-container">
-                        </div>
+                    <div class="scene-group" id="scene-group-container"></div>
                 </div>
-                <div id="visualizer-area">
+
+                <div id="visualizer-area" style="min-height: 800px;">
                     <div class="video-compare-wrapper" id="primary-compare">
                         <div class="slider-container" id="slider-container-1">
-                            <div class="video-layer layer-left" id="layer-left-1">
-                                <video id="vid-good-1" loop muted autoplay playsinline></video>
-                                <div class="video-label label-left">Good Case</div>
+                            <div class="video-layer layer-left">
+                                <video id="vid-top-left" loop muted autoplay playsinline></video>
+                                <div class="video-label label-left" id="label-tl" style="display: block !important;">Good Case 1</div>
                             </div>
-                            <div class="video-layer layer-right" id="layer-right-1">
-                                <video id="vid-bad-1" loop muted autoplay playsinline></video>
-                                <div class="video-label label-right">Bad Case</div>
+                            <div class="video-layer layer-right">
+                                <video id="vid-top-right" loop muted autoplay playsinline></video>
+                                <div class="video-label label-right" id="label-tr" style="display: block !important;">Good Case 2</div>
                             </div>
-                            <div class="slider-handle" id="handle-1" style="left: 50%;">
+                            <div class="slider-handle" id="handle-1">
                                 <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="extra-video-container" id="gt-container" style="display: none;">
-                        <span class="extra-label">Ground Truth (GT)</span>
+                    <div id="instruction-display" style="display: none; margin: 20px 0; padding: 15px; background: #fff; border-radius: 12px; border: 1px solid #ddd;">
+                        <div style="display: flex; gap: 20px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.7rem; font-weight: 800; color: #888; text-transform: uppercase;">Case 1 Instruction</span>
+                                <p id="text-good-content" style="font-size: 0.95rem; color: #333; margin: 5px 0 0 0; padding-left: 10px; border-left: 3px solid #007bff;"></p>
+                            </div>
+                            <div style="width: 1px; background: #eee;"></div>
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.7rem; font-weight: 800; color: #888; text-transform: uppercase;">Case 2 Instruction</span>
+                                <p id="text-bad-content" style="font-size: 0.95rem; color: #333; margin: 5px 0 0 0; padding-left: 10px; border-left: 3px solid #dc3545;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-compare-wrapper" id="secondary-compare" style="display: none;">
+                        <div class="slider-container" id="slider-container-2">
+                            <div class="video-layer layer-left">
+                                <video id="vid-bottom-left" loop muted autoplay playsinline></video>
+                                <div class="video-label label-left" id="label-bl" style="display: block !important;">Bad Case 1</div>
+                            </div>
+                            <div class="video-layer layer-right">
+                                <video id="vid-bottom-right" loop muted autoplay playsinline></video>
+                                <div class="video-label label-right" id="label-br" style="display: block !important;">Bad Case 2</div>
+                            </div>
+                            <div class="slider-handle" id="handle-2">
+                                <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="extra-video-container" id="gt-container" style="display: none; margin-top: 20px;">
+                        <span class="extra-label">Ground Truth</span>
+                        <div class="gt-video-box"><video id="vid-gt" loop muted autoplay playsinline></video></div>
+                    </div>
+                </div>
+
+                    <div id="instruction-display" style="display: none; margin: 30px 0; padding: 20px; background: #fff; border-radius: 12px; border: 1px solid #dee2e6; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                        <div style="display: flex; gap: 30px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.75rem; font-weight: 800; color: #666; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Case 1 Instruction</span>
+                                <div id="text-good-content" style="font-size: 1rem; color: #212529; line-height: 1.5; border-left: 4px solid #007bff; padding-left: 15px;"></div>
+                            </div>
+                            <div style="width: 1px; background: #eee;"></div>
+                            <div style="flex: 1;">
+                                <span style="font-size: 0.75rem; font-weight: 800; color: #666; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">Case 2 Instruction</span>
+                                <div id="text-bad-content" style="font-size: 1rem; color: #212529; line-height: 1.5; border-left: 4px solid #dc3545; padding-left: 15px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="extra-video-container" id="gt-container" style="display: none; margin-top: 30px;">
+                        <span class="extra-label">Ground Truth (GT) Reference</span>
                         <div class="gt-video-box">
                             <video id="vid-gt" loop muted autoplay playsinline></video>
                         </div>
                     </div>
-
-                    <div class="video-compare-wrapper" id="secondary-compare" style="display: none; margin-top: 20px;">
-                        <span class="extra-label" style="text-align:center; display:block; margin-bottom:5px;">Action Following: View 2</span>
-                        <div class="slider-container" id="slider-container-2">
-                            <div class="video-layer layer-left" id="layer-left-2">
-                                <video id="vid-good-2" loop muted autoplay playsinline></video>
-                                <div class="video-label label-left">Good Case (View 2)</div>
-                            </div>
-                            <div class="video-layer layer-right" id="layer-right-2">
-                                <video id="vid-bad-2" loop muted autoplay playsinline></video>
-                                <div class="video-label label-right">Bad Case (View 2)</div>
-                            </div>
-                            <div class="slider-handle" id="handle-2" style="left: 50%;">
-                                <div class="slider-circle"><i class="fas fa-arrows-alt-h"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-
                 </div>
-
             </div>
-
         </section>
+
+
     </main>
 
     <div class="footer">
@@ -880,7 +906,7 @@
                 folder: "Controllability",
                 subtasks: [
                     { name: "Instruction Following", path: "Instruction_Following", hasGT: true },
-                    { name: "Semantic Alignment", path: "Semnatic_Alignment" }, // Keep typo as per tree
+                    { name: "Semantic Alignment", path: "Semnatic_Alignment", hasGT: true }, // Keep typo as per tree
                     { name: "Action Following", path: "Action_Following", hasVideo2: true }
                 ]
             }
@@ -996,32 +1022,79 @@
             const sub = curSub.path;
             const pathBase = `${BASE_PATH}/${folder}/${sub}/${curScene}`;
 
-            // 1. Primary Comparison
-            vidGood1.src = `${pathBase}/good/video.mp4`;
-            vidBad1.src = `${pathBase}/bad/video.mp4`;
-            // Sync play
-            vidGood1.currentTime = 0; vidBad1.currentTime = 0;
-            vidGood1.play(); vidBad1.play();
+            const infoBox = document.getElementById('instruction-display');
+            const secBox = document.getElementById('secondary-compare');
+            
+            // 获取 4 个标签
+            const labTL = document.getElementById('label-tl');
+            const labTR = document.getElementById('label-tr');
+            const labBL = document.getElementById('label-bl');
+            const labBR = document.getElementById('label-br');
 
-            // 2. GT Handling
+            // 获取 4 个视频
+            const vTL = document.getElementById('vid-top-left');
+            const vTR = document.getElementById('vid-top-right');
+            const vBL = document.getElementById('vid-bottom-left');
+            const vBR = document.getElementById('vid-bottom-right');
+
+            if (sub.includes('Action_Following')) {
+                // --- 逻辑：Action Following ---
+                infoBox.style.display = 'block';
+                secBox.style.display = 'block';
+
+                // 设置标签文字
+                labTL.innerText = "Good Case 1";
+                labTR.innerText = "Good Case 2";
+                labBL.innerText = "Bad Case 1";
+                labBR.innerText = "Bad Case 2";
+
+                // 分配视频源
+                vTL.src = `${pathBase}/good/video.mp4`;   // Good 1
+                vTR.src = `${pathBase}/good/video_2.mp4`; // Good 2
+                vBL.src = `${pathBase}/bad/video.mp4`;    // Bad 1
+                vBR.src = `${pathBase}/bad/video_2.mp4`;  // Bad 2
+
+                // 加载指令并处理 **加粗**
+                const fetchTxt = (url, el) => {
+                    fetch(url).then(r => r.ok ? r.text() : "").then(t => {
+                        el.innerHTML = t.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                    });
+                };
+                fetchTxt(`${pathBase}/good/1.txt`, document.getElementById('text-good-content'));
+                fetchTxt(`${pathBase}/good/2.txt`, document.getElementById('text-bad-content'));
+
+            } else {
+                // --- 逻辑：其他普通任务 ---
+                infoBox.style.display = 'none';
+                
+                // 恢复默认标签
+                labTL.innerText = "Good Case";
+                labTR.innerText = "Bad Case";
+                labBL.innerText = "Good Case (V2)";
+                labBR.innerText = "Bad Case (V2)";
+
+                vTL.src = `${pathBase}/good/video.mp4`;
+                vTR.src = `${pathBase}/bad/video.mp4`;
+
+                if (curSub.hasVideo2) {
+                    secBox.style.display = 'block';
+                    vBL.src = `${pathBase}/good/video_2.mp4`;
+                    vBR.src = `${pathBase}/bad/video_2.mp4`;
+                } else {
+                    secBox.style.display = 'none';
+                }
+            }
+
+            // 播放所有视频
+            [vTL, vTR, vBL, vBR].forEach(v => { if(v.src) v.play().catch(()=>{}); });
+
+            // GT 逻辑保持不变
             if (curSub.hasGT) {
                 gtContainer.style.display = 'block';
                 vidGT.src = `${pathBase}/gt/video.mp4`;
-                vidGT.play();
+                vidGT.play().catch(()=>{});
             } else {
                 gtContainer.style.display = 'none';
-                vidGT.pause();
-            }
-
-            // 3. Action Following (Video 2) Handling
-            if (curSub.hasVideo2) {
-                secCompare.style.display = 'block';
-                vidGood2.src = `${pathBase}/good/video_2.mp4`;
-                vidBad2.src = `${pathBase}/bad/video_2.mp4`;
-                vidGood2.play(); vidBad2.play();
-            } else {
-                secCompare.style.display = 'none';
-                vidGood2.pause(); vidBad2.pause();
             }
         }
 

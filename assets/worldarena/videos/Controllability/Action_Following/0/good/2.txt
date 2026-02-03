@@ -1,0 +1,1 @@
+Using the ALOHA-AgileX dual-arm robot to pick up the wearable foot protector shoe and move it **across the room**, placing it on the **far left corner of the rug** instead of the mat
