@@ -407,6 +407,8 @@
             min-width: 0; 
             overflow: hidden; 
             position: relative;
+            display: flex; /* 必须是 flex 才能让 justify-content 生效 */
+            background: #000;
         }
 
         .video-layer.layer-left {
@@ -414,23 +416,26 @@
             width: 50%; 
             border-right: 1px solid white;
             z-index: 2; /* Keep above if needed */
+            justify-content: flex-start; /* 关键：视频靠左边界 */
         }
 
         .video-layer.layer-right {
             /* Right side automatically fills remaining space */
             flex: 1; 
             min-width: 0;
+            z-index: 1; /* Keep below if needed */
+            justify-content: flex-end; /* 关键：视频靠右边界 */
         }
 
         .layer-left {
             /* 初始宽度，JS 会动态改这个值 */
             width: 50%; 
-            justify-content: flex-end; /* 视频向右靠，顶住中间线 */
+            justify-content: flex-start; /* 视频向右靠，顶住中间线 */
         }
 
         .layer-right {
             flex: 1; /* 自动占据剩下的所有右侧空间 */
-            justify-content: flex-start; /* 视频向左靠，顶住中间线 */
+            justify-content: flex-end; /* 视频向左靠，顶住中间线 */
         }
 
         .video-layer video {
