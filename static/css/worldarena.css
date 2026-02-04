@@ -1,120 +1,678 @@
-/* ===== 切半对比容器 ===== */
+/* ==================== 基础设置 ==================== */
+html {
+    scroll-behavior: smooth; /* 全局平滑滚动 */
+    scroll-padding-top: 100px; /* 跳转后顶部留出的距离，防止标题被遮挡 */
+}
 
-.video-compare-split {
+/* --- WorldArena 文字颜色 --- */
+.worldarena { font-weight: bold; }
+.worldarena .w  { color: #34cccc; }
+.worldarena .o  { color: #46cbbb; }
+.worldarena .r  { color: #5fcaa1; }
+.worldarena .l  { color: #77c888; }
+.worldarena .d  { color: #9bc765; }
+.worldarena .a { color: #b9c546; }
+.worldarena .r  { color: #e3c21c; }
+.worldarena .e  { color: #f3c10c; }
+.worldarena .n  { color: #ffc000; }
+.worldarena .a  { color: #ff9900; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    background-color: #f9fafb;
+    overflow-x: hidden;
+}
+
+/* ==================== 侧边栏 ==================== */
+.fixed-sidebar {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 180px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 1000;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.fixed-sidebar h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.fixed-sidebar nav a {
+    display: block;
+    font-size: 0.76rem;
+    color: #64748b;
+    text-decoration: none;
+    padding: 8px 12px; /* 稍微增加间距以便点击 */
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 更平滑的过渡 */
+    line-height: 1.4;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+    margin-bottom: 4px;
     position: relative;
+}
+
+/* 悬停效果 */
+.fixed-sidebar nav a:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.05);
+    transform: translateX(4px); /* 悬停时向右微动，更有动感 */
+}
+
+/* 重点：感应到滚动位置后的激活样式 */
+.fixed-sidebar nav a.active {
+    color: #1e40af !important;
+    font-weight: 700;
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-left: 3px solid #2563eb !important; /* 明显的左侧边框 */
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    transform: translateX(4px); /* 激活时也保持偏移，突出显示 */
+}
+
+d-contents { 
+    display: none !important; 
+}
+
+/* ==================== 主布局 ==================== */
+main {
+    margin-left: 220px;
+    margin-right: 40px;
+    max-width: calc(100% - 260px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ==================== 响应式调整 ==================== */
+@media (max-width: 1200px) {
+    .fixed-sidebar { 
+        display: none; 
+    }
+    main { 
+        margin: 0 auto; 
+        max-width: 1000px; 
+        padding: 20px; 
+    }
+}
+
+@media (max-width: 768px) {
+    .benchmark-table { 
+        font-size: 0.75rem; 
+    }
+}
+
+/* ==================== 表格 ==================== */
+.benchmark-table-container {
     width: 100%;
-    height: 100%;           /* 高度由 .video-hero 的 aspect-ratio 决定 */
-    border-radius: inherit;
-    overflow: hidden;
-    --split: 50%;           /* 切割位置，0% 左端，100% 右端 */
-  }
-  
-  /* 两层视频都铺满容器 */
-  .video-compare-split .video-wrapper {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;   /* 不挡住拖拽事件 */
-  }
-  
-  .video-compare-split .video-el {
+    overflow-x: auto; /* 保证在手机端可以左右滑动 */
+    margin: 20px 0;
+}
+
+.benchmark-table {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  /* GT：显示左半边 [0, split] */
-  .video-compare-split .gt-layer {
-    clip-path: polygon(0 0, var(--split) 0, var(--split) 100%, 0 100%);
-  }
-  
-  /* 生成方法：显示右半边 [split, 100] */
-  .video-compare-split .gen-layer {
-    clip-path: polygon(var(--split) 0, 100% 0, 100% 100%, var(--split) 100%);
-  }
-  
-  /* 左右标签 */
-  .video-compare-split .video-label {
-    position: absolute;
-    bottom: 10px;
-    padding: 4px 10px;
-    font-size: 14px;
-    font-family: "Rubik", sans-serif;
-    border-radius: 999px;
-    background: rgba(0,0,0,.55);
-    color: #fff;
-    backdrop-filter: blur(4px);
-    letter-spacing: .3px;
-  }
-  
-  .video-compare-split .label-left {
-    left: 10px;
-  }
-  
-  .video-compare-split .label-right {
-    right: 10px;
-  }
-  
-  /* 拖拽手柄 */
-  .video-compare-split .split-handle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 28px;                         /* 点击区域宽一点好操作 */
-    left: var(--split);
-    transform: translateX(-50%);
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #334155;
+    background: white;
+}
+
+.benchmark-table th, .benchmark-table td {
+    border: 1px solid #e2e8f0;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.benchmark-table thead th {
+    background-color: #f8fafc;
+    font-weight: 600;
+}
+
+.benchmark-table .benchmark-name {
+    text-align: left;
+    padding-left: 20px;
+    font-weight: 500;
+}
+
+/* 强调 WorldArena (Ours) 这一行 */
+.benchmark-table .ours {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+/* 状态图标样式 */
+.status-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+.check {
+    color: #22c55e; /* 绿色勾 */
+}
+.cross {
+    color: #ef4444; /* 红色叉 */
+}
+
+/* ==================== 卡片 ==================== */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-bottom: 3rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+}
+
+/* ==================== Header / Hero ==================== */
+.hero-section {
+    width: 100%;
+    min-height: 70vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: ew-resize;
-    z-index: 5;
-  }
-  
-  /* 中间竖线 */
-  .video-compare-split .handle-line {
+    text-align: center;
+    color: white;
+    padding: 60px 20px;
+    position: relative;
+}
+
+.main-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    opacity: 0.95;
+    line-height: 1.4;
+}
+
+.action-buttons {
+    display: flex; 
+    gap: 1rem; 
+    justify-content: center; 
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex; 
+    align-items: center; 
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary { 
+    background: white; 
+    color: #1e293b; 
+}
+
+.btn-secondary { 
+    background: rgba(255,255,255,0.15); 
+    color: white; 
+    border: 1px solid rgba(255,255,255,0.3); 
+}
+
+.btn:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+}
+
+/* ==================== 章节标题 ==================== */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.section-title::after {
+    content: ''; 
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    width: 60px; 
+    height: 4px; 
+    background: #2563eb;
+}
+
+.section-subtitle { 
+    font-size: 1.2rem; 
+    color: #64748b; 
+    margin-bottom: 2.5rem; 
+}
+
+/* ==================== 图片 ==================== */
+.perceptual-image { 
+    width: 100%; 
+    border-radius: 12px; 
+    margin: 2rem 0; 
+}
+
+/* ==================== 指标网格 ==================== */
+.metrics-grid {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 1.5rem; 
+    margin-top: 2rem;
+}
+
+.metric-category {
+    background: #f8fafc; 
+    border-radius: 8px; 
+    padding: 1.5rem; 
+    border-left: 4px solid #2563eb;
+}
+
+.metric-category h4 { 
+    margin: 0 0 1rem 0; 
+    color: #1e293b; 
+}
+
+.metric-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+.metric-list li { 
+    padding: 6px 0; 
+    border-bottom: 1px solid #e2e8f0; 
+    color: #64748b; 
+    font-size: 0.9rem; 
+}
+
+/* ==================== WorldArena 徽章 ==================== */
+.worldarena-badge {
+    background: #2563eb; 
+    color: white; 
+    padding: 4px 10px; 
+    border-radius: 12px; 
+    font-size: 0.8rem; 
+    margin-right: 8px;
+}
+
+/* ==================== 公式框 ==================== */
+.formula-box {
+    background: #f1f5f9; 
+    padding: 1.5rem; 
+    border-radius: 8px; 
+    font-family: monospace; 
+    text-align: center; 
+    border: 1px dashed #cbd5e1; 
+    margin-top: 2rem;
+}
+
+/* ==================== 高亮框 ==================== */
+.highlight-box {
+    background: #eff6ff; 
+    border-left: 4px solid #2563eb; 
+    padding: 1.5rem; 
+    margin: 1.5rem 0; 
+    border-radius: 6px;
+}
+
+/* ==================== VISUALIZATION ARENA STYLES ==================== */
+
+/* 1. Dimension Tabs (Visual Quality, Motion Quality...) */
+.dim-tabs {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    justify-content: center; 
+    margin-bottom: 20px;
+}
+
+.dim-btn {
+    padding: 10px 20px; 
+    background: white; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 30px;
+    cursor: pointer; 
+    font-weight: 500; 
+    color: #64748b; 
+    transition: all 0.2s;
+}
+
+.dim-btn:hover { 
+    border-color: #2563eb; 
+    color: #2563eb; 
+}
+
+.dim-btn.active { 
+    background: #2563eb; 
+    color: white; 
+    border-color: #2563eb; 
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25); 
+}
+
+/* 2. Sub-Dimension Tabs (Image Quality, etc.) */
+.sub-tabs {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 8px; 
+    justify-content: center; 
+    margin-bottom: 25px;
+    background: #f8fafc; 
+    padding: 15px; 
+    border-radius: 12px;
+}
+
+.sub-btn {
+    padding: 8px 16px; 
+    background: white; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 8px;
+    cursor: pointer; 
+    font-size: 0.9rem; 
+    color: #475569; 
+    transition: all 0.2s;
+}
+
+.sub-btn.active {
+    background: #e0f2fe; 
+    color: #0284c7; 
+    border-color: #0284c7; 
+    font-weight: 600;
+}
+
+/* 3. Scene Selection & Instructions */
+.scene-control-bar {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+/* 场景选择区域容器 */
+.scene-selection-area {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.scene-group {
+    display: flex;
+    gap: 20px; /* 增加按钮之间的间距 */
+}
+
+/* 单个按钮的包裹框 */
+.scene-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* 缩略图变大 */
+.scene-thumb {
+    width: 240px; /* 宽度增加 */
+    height: 150px; /* 高度增加 */
+    border-radius: 8px;
+    border: 3px solid #e2e8f0;
+    object-fit: cover;
+    transition: all 0.3s ease;
+    filter: grayscale(0.5); /* 未选中时带一点灰色 */
+}
+
+.scene-item:hover .scene-thumb {
+    transform: translateY(-5px);
+    border-color: #cbd5e1;
+    filter: grayscale(0);
+}
+
+/* 选中状态 */
+.scene-item.active .scene-thumb {
+    border-color: #2563eb;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+    filter: grayscale(0);
+}
+
+/* Task 文字标注 */
+.scene-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: color 0.3s;
+}
+
+.scene-item.active .scene-label {
+    color: #2563eb;
+}
+
+.scene-thumb:hover { 
+    opacity: 1; 
+    transform: scale(1.05); 
+}
+
+.scene-thumb.active { 
+    border-color: #2563eb; 
+    opacity: 1; 
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2); 
+}
+
+.instruction-text {
+    font-size: 0.85rem; 
+    color: #64748b; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px;
+    background: #f1f5f9; 
+    padding: 6px 12px; 
+    border-radius: 20px;
+}
+
+.instruction-text i { 
+    color: #2563eb; 
+}
+
+/* ==================== 视频比较器 ==================== */
+.video-compare-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 30px auto;
+    aspect-ratio: 16 / 9; /* 宽屏大容器 */
+    background: #000;
+    overflow: hidden;
+    display: flex; /* 关键：让左右两部分并排 */
+}
+
+.video-layer {
+    /* Ensure flex items can shrink properly */
+    min-width: 0; 
+    overflow: hidden; 
+    position: relative;
+    display: flex; /* 必须是 flex 才能让 justify-content 生效 */
+    background: #000;
+}
+
+.video-layer.layer-left {
+    /* Left side is controlled by JS width % */
+    width: 50%; 
+    border-right: 1px solid white;
+    z-index: 2; /* Keep above if needed */
+    justify-content: flex-start; /* 关键：视频靠左边界 */
+}
+
+.video-layer.layer-right {
+    /* Right side automatically fills remaining space */
+    flex: 1; 
+    min-width: 0;
+    z-index: 1; /* Keep below if needed */
+    justify-content: flex-end; /* 关键：视频靠右边界 */
+}
+
+.layer-left {
+    /* 初始宽度，JS 会动态改这个值 */
+    width: 50%; 
+    justify-content: flex-start; /* 视频向右靠，顶住中间线 */
+}
+
+.layer-right {
+    flex: 1; /* 自动占据剩下的所有右侧空间 */
+    justify-content: flex-end; /* 视频向左靠，顶住中间线 */
+}
+
+.video-layer video {
+    /* 关键：视频高度撑满，宽度自适应，保证 4:3 完整 */
+    height: 100%;
+    width: auto;
+    max-width: 100%; 
+    object-fit: contain;
+}
+
+/* 滑块手柄改为基于百分比定位 */
+.slider-handle {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 2px;
-    background: rgba(255,255,255,.9);
-    box-shadow: 0 0 8px rgba(0,0,0,.35);
-  }
-  
-  /* 箭头胶囊 */
-  .video-compare-split .handle-arrows {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 6px;
-    border-radius: 999px;
-    background: rgba(0,0,0,.6);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,.35);
-  }
-  
-  .videogen-compare.dragging .split-handle {
+    width: 4px;
+    background: #fff;
+    z-index: 10;
     cursor: ew-resize;
-  }
-  
-  /* 深色模式微调 */
-  @media (prefers-color-scheme: dark) {
-    .video-compare-split .handle-line {
-      background: rgba(255,255,255,.85);
-    }
-    .video-compare-split .handle-arrows {
-      background: rgba(0,0,0,.75);
-    }
-  }
-
-d-article > .wb-simple-card {
-  grid-column: text;
-  margin: 2rem 0;
+    transform: translateX(-50%); /* 确保线正好在两个盒子交界处 */
 }
 
-d-article > .wb-simple-card img {
-  display: block;
-  width: 75%; 
-  height: auto;
+.slider-container {
+    display: flex; /* 让左右两个 layer 并排 */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
 }
 
+/* Labels: Bottom Corners, Small, Semi-transparent */
+.video-label {
+    position: absolute; 
+    bottom: 8px; 
+    padding: 2px 8px;
+    background: rgba(0, 0, 0, 0.6); 
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 11px; 
+    font-weight: 500; 
+    border-radius: 4px; 
+    pointer-events: none; 
+    z-index: 10;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.label-left { 
+    left: 8px; 
+}
+
+.label-right { 
+    right: 8px; 
+}
+
+#secondary-compare .video-label {
+    display: block !important;
+}
+
+/* Handle */
+.slider-handle {
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    width: 2px; 
+    background: white; 
+    z-index: 20; 
+    cursor: ew-resize;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.slider-circle {
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 32px; 
+    height: 32px; 
+    background: white; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+    color: #333; 
+    font-size: 14px;
+}
+
+/* Extra Videos Container (GT or Video 2) */
+.extra-video-container {
+    margin-top: 15px; 
+    text-align: center;
+}
+
+.extra-label {
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    color: #475569; 
+    margin-bottom: 5px; 
+    display: block;
+}
+
+.gt-video-box {
+    display: inline-block; 
+    width: 100%; 
+    max-width: 400px; 
+    border-radius: 8px; 
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    border: 2px solid #e2e8f0;
+}
+
+.gt-video-box video { 
+    width: 100%; 
+    display: block; 
+}
+
+/* ==================== 页脚 ==================== */
+.footer { 
+    background: #1e293b; 
+    color: white; 
+    padding: 60px 20px; 
+    text-align: center; 
+    margin-top: 60px; 
+}
+
+.footer a { 
+    color: #60a5fa; 
+    text-decoration: none; 
+}
