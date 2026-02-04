@@ -631,7 +631,7 @@
                 
                 <!-- 插入图片 -->
                 <div>
-                    <img src="assets_common/photos/Perceptual evaluation.svg" alt="Perceptual Evaluation Metrics" class="perceptual-image">
+                    <img src="assets_common/photos/Perceptual evaluation.png" alt="Perceptual Evaluation Metrics" class="perceptual-image">
                     <p class="caption" style="color: #000; font-style: italic; text-align: center; margin-top: 10px; font-weight: 600;">
                         Figure 1: Six dimensions of perceptual evaluation with 16 specific metrics
                     </p>
@@ -708,7 +708,7 @@
                 
                 <!-- 架构图 -->
                 <div>
-                    <img src="assets_common/photos/Embodied_evaluation.svg" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
+                    <img src="assets_common/photos/Embodied_evaluation.png" alt="Embodied Task Functionality Evaluation" class="perceptual-image">
                     <p class="caption" style="color: #000; font-style: italic; text-align: center; margin-top: 10px; font-weight: 600;">
                         Figure 2: Embodied Task Functionality Evaluation Framework
                     </p>
@@ -1101,9 +1101,9 @@
                 vBR.src = `${pathBase}/bad/video_2.mp4`;  // Bad 2
 
                 updateLabelWithModelName("Good Case 1: ", `${pathBase}/good/model1.txt`, labTL);
-                updateLabelWithModelName("Good Case 2: ", `${pathBase}/good/model1.txt`, labTR);
-                updateLabelWithModelName("Bad Case 1: ",  `${pathBase}/good/model2.txt`,  labBL);
-                updateLabelWithModelName("Bad Case 2: ",  `${pathBase}/good/model2.txt`,  labBR);
+                updateLabelWithModelName("Good Case 2: ", `${pathBase}/good/model2.txt`, labTR);
+                updateLabelWithModelName("Bad Case 1: ",  `${pathBase}/bad/model1.txt`,  labBL);
+                updateLabelWithModelName("Bad Case 2: ",  `${pathBase}/bad/model2.txt`,  labBR);
 
                 // 加载指令并处理 **加粗**
                 const fetchTxt = (url, el) => {
