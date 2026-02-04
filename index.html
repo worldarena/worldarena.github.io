@@ -1073,7 +1073,7 @@
             const vBL = document.getElementById('vid-bottom-left');
             const vBR = document.getElementById('vid-bottom-right');
 
-            const updateLabelWithModelName = (prefix, url, element) => {
+            const updateLabelWithModelName_good = (prefix, url, element) => {
                 fetch(url)
                     .then(r => {
                         if (r.ok) return r.text();
@@ -1082,10 +1082,25 @@
                     .then(text => {
                         // 去除可能存在的换行符
                         const modelName = text.trim();
-                        element.innerText = `${prefix}${modelName}`;
+                        element.innerHTML = `${prefix}<span style="color: #22c55e; font-weight: bold;">${modelName}</span>`;
                     })
                     .catch(() => {
-                        element.innerText = `${prefix}Unknown`;
+                        element.innerHTML = `${prefix}<span style="color: #ef4444;">Unknown</span>`;
+                    });
+            };
+            const updateLabelWithModelName_bad = (prefix, url, element) => {
+                fetch(url)
+                    .then(r => {
+                        if (r.ok) return r.text();
+                        return "Unknown Model"; // 如果文件不存在，显示默认值
+                    })
+                    .then(text => {
+                        // 去除可能存在的换行符
+                        const modelName = text.trim();
+                        element.innerHTML = `${prefix}<span style="color: #ef4444; font-weight: bold;">${modelName}</span>`;
+                    })
+                    .catch(() => {
+                        element.innerHTML = `${prefix}<span style="color: #ef4444;">Unknown</span>`;
                     });
             };
 
@@ -1100,10 +1115,10 @@
                 vBL.src = `${pathBase}/bad/video.mp4`;    // Bad 1
                 vBR.src = `${pathBase}/bad/video_2.mp4`;  // Bad 2
 
-                updateLabelWithModelName("Good Case 1: ", `${pathBase}/good/model1.txt`, labTL);
-                updateLabelWithModelName("Good Case 2: ", `${pathBase}/good/model1.txt`, labTR);
-                updateLabelWithModelName("Bad Case 1: ",  `${pathBase}/good/model2.txt`,  labBL);
-                updateLabelWithModelName("Bad Case 2: ",  `${pathBase}/good/model2.txt`,  labBR);
+                updateLabelWithModelName_good("Good Case 1: ", `${pathBase}/good/model1.txt`, labTL);
+                updateLabelWithModelName_good("Good Case 2: ", `${pathBase}/good/model1.txt`, labTR);
+                updateLabelWithModelName_bad("Bad Case 1: ",  `${pathBase}/good/model2.txt`,  labBL);
+                updateLabelWithModelName_bad("Bad Case 2: ",  `${pathBase}/good/model2.txt`,  labBR);
 
                 // 加载指令并处理 **加粗**
                 const fetchTxt = (url, el) => {
